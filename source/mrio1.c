@@ -44,8 +44,9 @@ the CertiVox MIRACL Crypto SDK with a closed source product.               *
 int instr(_MIPD_ flash x,char *string)
 {  /*  input a big number       *
     *  returns length in digits */
-    int i,ipt,n,s,e;
-    int ch;
+    int i,ipt,n,s,e,pads;
+	BOOL first_after_pad;
+    int ch,lc;
 #ifdef MR_FLASH
     BOOL frac;
 #endif
@@ -154,6 +155,8 @@ int instr(_MIPD_ flash x,char *string)
         }
         if (string[e]=='+') e++;
     }
+
+	pads=0; first_after_pad=TRUE;
     for (i=mr_mip->INPLEN-1;i>=e;i--)
     {
         ch=(unsigned char)string[i];
@@ -188,7 +191,7 @@ int instr(_MIPD_ flash x,char *string)
                 if (ch>127 && ch<138) ch-=76;
                 if (ch==123) ch=62;
                 if (ch==127) ch=63;
-                if (ch==141) continue; /* ignore pads '=' */
+                if (ch==141) {pads++; continue;} /* pads '=' */
             }
             else
             {
@@ -205,15 +208,34 @@ int instr(_MIPD_ flash x,char *string)
             }
         }
          
-        if ((mr_small)ch>=mr_mip->apbase)
+        if ((mr_small)ch>=mr_mip->apbase || pads>2)
         {
             mr_berror(_MIPP_ MR_ERR_BAD_FORMAT);
             MR_OUT
             return 0;
         }
-        n++;
+       
+		if (pads && first_after_pad)
+		{ /* there was padding, so adjust */
+			lc=ch>>(2*pads);
+			first_after_pad=FALSE;
+			continue;
+		}
+
+		n++;
+		if (pads)
+		{
+			putdig(_MIPP_ 0x3f&((ch<<(6-2*pads))|lc),x,n);
+			lc=(ch>>(2*pads));
+			continue;
+		}
+		
         putdig(_MIPP_ ch,x,n);
     }
+
+	if (pads && lc>0)
+		putdig(_MIPP_ lc,x,++n);
+	
     ipt=mr_mip->INPLEN;
     mr_mip->INPLEN=0;
     insign(s,x);
@@ -327,6 +349,10 @@ int otstr(_MIPD_ flash x,char *string)
     {
         nd=numdig(_MIPP_ mr_mip->w6);
         m=nd;
+		if (mr_mip->apbase==64)
+		{ /* add leading zeros to base64 */
+			while (m%4!=0) m++;
+		}
         if (rp>m) m=rp;
         for (i=m;i>0;i--)
         { 
@@ -348,7 +374,7 @@ int otstr(_MIPD_ flash x,char *string)
                 n++;
             }
 #endif
-            if (i>nd) ch='0';
+            if (i>nd && mr_mip->apbase!=64) ch='0';
             else
             {
                 ch=getdig(_MIPP_ mr_mip->w6,i);
@@ -398,8 +424,9 @@ int otstr(_MIPD_ flash x,char *string)
         done=TRUE;
 #endif
     }
+/*
     if (mr_mip->apbase==64)
-    { /* base64 padding */
+    {  
         while (n%3!=0) 
         {
 #ifndef MR_NO_FILE_IO
@@ -410,7 +437,9 @@ int otstr(_MIPD_ flash x,char *string)
 #endif
             n++;
         }
+
     }
+*/
 /* Append a trailing 0 - it may be printable ascii text */    
 
 #ifndef MR_NO_FILE_IO

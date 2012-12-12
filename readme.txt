@@ -58,6 +58,7 @@ In the subdirectory SOURCE
   CS.MCS       -    Alternate C macros
   CLMUL.MCS    -    MSC Intrinsic macros to use PCLMULQDQ instruction
   GCCLMUL.MCS  -    GCC assembly language to support PCLMULQDQ instruction 
+  MIPS.MCS     -    Macros for MIPS32 processor
   SMARTMIP.MCS -    Macros for Smartmips smart-card processor
   MS86.MCS     -    Microsoft/Borland 80*86/Pentium macros for use with above
   GCC386.MCS   -    GCC compiler compatible Pentium macros

@@ -810,7 +810,7 @@ BOOL ecn2_add3(_MIPD_ ecn2 *Q,ecn2 *P,zzn2 *lam,zzn2 *ex1,zzn2 *ex2)
 /* Dahmen, Okeya and Schepers "Affine Precomputation with Sole Inversion in Elliptic Curve Cryptography" */
 /* Precomputes table into T. Assumes first P has been copied to P[0], then calculates 3P, 5P, 7P etc. into T */
 
-#define MR_PRE_2 (14+4*MR_MAX_M_T_S)
+#define MR_PRE_2 (14+4*MR_ECC_STORE_N2)
 
 static void ecn2_pre(_MIPD_ int sz,BOOL norm,ecn2 *PT)
 {
@@ -827,7 +827,7 @@ static void ecn2_pre(_MIPD_ int sz,BOOL norm,ecn2 *PT)
     zzn2 *e=(zzn2 *)mr_alloc(_MIPP_ sz,sizeof(zzn2));
     char *mem = (char *)memalloc(_MIPP_ 14+4*sz);
 #else
-    zzn2 d[MR_MAX_M_T_S],e[MR_MAX_M_T_S];
+    zzn2 d[MR_ECC_STORE_N2],e[MR_ECC_STORE_N2];
     char mem[MR_BIG_RESERVE(MR_PRE_2)];       
  	memset(mem, 0, MR_BIG_RESERVE(MR_PRE_2));   
 #endif
@@ -2343,7 +2343,7 @@ BOOL ecn2_add_sub(_MIPD_ ecn2 *P,ecn2 *Q,ecn2 *PP,ecn2 *PM)
 
 /* Precomputation of  3P, 5P, 7P etc. into PT. Assume PT[0] contains P */
 
-#define MR_PRE_2 (6+2*MR_MAX_M_T_S)
+#define MR_PRE_2 (6+2*MR_ECC_STORE_N2)
 
 static void ecn2_pre(_MIPD_ int sz,BOOL norm,ecn2 *PT)
 {
@@ -2357,7 +2357,7 @@ static void ecn2_pre(_MIPD_ int sz,BOOL norm,ecn2 *PT)
 	zzn2 *work=(zzn2 *)mr_alloc(_MIPP_ sz,sizeof(zzn2));
     char *mem = memalloc(_MIPP_ 6+2*sz);
 #else
-	zzn2 work[MR_MAX_M_T_S];
+	zzn2 work[MR_ECC_STORE_N2];
     char mem[MR_BIG_RESERVE(MR_PRE_2)];
     memset(mem, 0, MR_BIG_RESERVE(MR_PRE_2));
 #endif
@@ -3347,7 +3347,6 @@ void ecn2_mult4(_MIPD_ big *e,ecn2 *P,ecn2 *R)
 
     MR_OUT
 }
-
 
 #ifndef MR_STATIC
 

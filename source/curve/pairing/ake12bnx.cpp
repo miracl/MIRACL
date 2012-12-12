@@ -338,7 +338,9 @@ fpa=fpc=fpx=fpmq=fpsq=fpaq=0;
 
     t1=pow(t1,-x);
 
-    x2=t1; x2.powq(X); 
+    x2=t1; 
+	
+	x2.powq(X); 
     x4/=x2;
    
     x2.powq(X);
@@ -539,6 +541,7 @@ void glv(Big &e,Big &r,Big W[2],Big B[2][2],Big u[2])
 
 // Use GLV endomorphism idea for multiplication in G1
 
+
 ECn G1_mult(ECn &P,Big &e,ZZn &Beta,Big &r,Big W[2],Big B[2][2])
 {
 //	return e*P;
@@ -702,9 +705,12 @@ int main()
     Alice=hash_and_map((char *)"Alice");
     Bob=  hash_and_map((char *)"Robert");
 
+
 	sS=G2_mult(Server,ss,X,q,WB,BB);    // Use Galbraith-Scott Homomorphism to multiply in G2
-	sA=G1_mult(Alice,ss,Beta,q,W,SB);   // Use GLV method to multiply in G1
-    sB=G1_mult(Bob,ss,Beta,q,W,SB);	
+	sA=G1_mult(Alice,ss,Beta,q,W,SB);   // Use GLV method to multiply in G1	
+	sB=G1_mult(Bob,ss,Beta,q,W,SB);	
+
+
 
     cout << "Alice and Server Key Exchange" << endl;
 

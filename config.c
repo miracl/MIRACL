@@ -120,7 +120,7 @@ int main()
 
 
     fp=fopen("mirdef.tst","wt");
-    fprintf(fp,"/*\n *   MIRACL compiler/hardware definitions - mirdef.h\n");
+    fprintf(fp,"/*\n *   MIRACL compiler/hardware definitions - mirdef.h\n */\n");
     end=1;
     ptr=(char *)(&end);
 

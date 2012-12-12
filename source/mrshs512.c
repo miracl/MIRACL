@@ -224,7 +224,7 @@ void shs384_process(sha384 *sh,int byte)
 { /* process the next message byte */
     int cnt;
     
-    cnt=(int)((sh->length[0]/64)%16);
+    cnt=(int)((sh->length[0]/48)%16);
     
     sh->w[cnt]<<=8;
     sh->w[cnt]|=(mr_unsign64)(byte&0xFF);
@@ -259,7 +259,7 @@ void shs384_hash(sha384 *sh,char hash[48])
     mr_unsign64 len0,len1;
     len0=sh->length[0];
     len1=sh->length[1];
-    shs512_process(sh,PAD);
+    shs384_process(sh,PAD);
     while ((sh->length[0]%1024)!=896) shs384_process(sh,ZERO);
     sh->w[14]=len1;
     sh->w[15]=len0;    
