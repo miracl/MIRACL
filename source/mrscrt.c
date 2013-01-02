@@ -120,7 +120,7 @@ void scrt_end(small_chinese *c)
 void scrt(_MIPD_ small_chinese *c,mr_utype *u,big x)
 { /* Chinese Remainder Thereom                  *
    * Calculate x given remainders u[i] mod M[i] */
-    int i,j,k;
+    int i,j,k,len;
     mr_utype *V,*C,*M;
     mr_small t;
 #ifdef MR_OS_THREADS
@@ -132,8 +132,9 @@ void scrt(_MIPD_ small_chinese *c,mr_utype *u,big x)
     V=c->V;
     C=c->C;
     M=c->M;
-    if (c->NP<1) return;
-    if (c->NP==1)
+    len=c->NP;
+    if (len<1) return;
+    if (len==1)
     {
         t=smul(1,in_range(u[0],M[0]),M[0]);
         convert(_MIPP_ 1,mr_mip->w5);
@@ -141,7 +142,8 @@ void scrt(_MIPD_ small_chinese *c,mr_utype *u,big x)
         return;
     }
     V[0]=u[0];
-    for (k=0,i=1;i<c->NP;i++)
+    k=0;
+    for (i=1;i<len;i++)
     { /* Knuth P. 274 */
         V[i]=u[i] - V[0];
 #ifdef MR_FP_ROUNDING
@@ -152,7 +154,7 @@ void scrt(_MIPD_ small_chinese *c,mr_utype *u,big x)
         V[i]=smul(in_range(V[i],M[i]),C[k],M[i]);
 #endif
         k++;
-
+	if (i==1) continue;
 #ifndef MR_FP
 #ifdef INLINE_ASM
 #if INLINE_ASM == 3
@@ -190,48 +192,44 @@ void scrt(_MIPD_ small_chinese *c,mr_utype *u,big x)
         ASM jmp s1
      s2:
         ASM nop
-
 #endif
 
 #if INLINE_ASM == 4
 #define MR_IMPASM
     ASM (
-           "movl %0,%%ebx\n"
-           "movl %1,%%esi\n"
-           "movl %2,%%edi\n"
-           "movl $1,%%ecx\n"
-           "movl %3,%%edx\n"
+	   "movl %0,%%ecx\n"
+           "movl %1,%%ebx\n"
+           "movl %2,%%esi\n"
+           "movl %3,%%edi\n"
+           "movl %4,%%edx\n"
+           "pushl %%ebp\n"
+	   "movl $1,%%ebp\n"
            "movl (%%esi,%%edx,4),%%esi\n"
-         "s1:\n"
-           "cmpl %%edx,%%ecx\n"
-           "jge s2\n"
-
+         "0:\n"
+           "cmpl %%edx,%%ebp\n"
+           "jge 1f\n"
            "movl (%%ebx,%%edx,4),%%eax\n"
+           "subl (%%ebx,%%ebp,4),%%eax\n"
            "pushl %%edx\n"
-
-           "subl (%%ebx,%%ecx,4),%%eax\n"
-
            "cltd \n"
            "idivl %%esi\n"
            "movl %%edx,%%eax\n"
            "addl %%esi,%%eax\n"
 
-           "movl %4,%%edx\n"
-           "mull (%%edi,%%edx,4)\n"
+           "mull (%%edi,%%ecx,4)\n"
            "divl %%esi\n"
-
            "movl %%edx,%%eax\n"
-
            "popl %%edx\n"
            "movl %%eax,(%%ebx,%%edx,4)\n"
-           "incl %4\n"
            "incl %%ecx\n"
-           "jmp s1\n"
-         "s2:\n"
-           "nop\n"
-         :
-         :"m"(V),"m"(M),"m"(C),"m"(i),"m"(k)
-         :"eax","ebx","ecx","edx","esi","edi","memory"
+           "incl %%ebp\n"
+           "jmp 0b\n"
+         "1:\n"
+           "popl %%ebp\n"
+	   "movl %%ecx,%0\n"
+         :"=m"(k)
+         :"m"(V),"m"(M),"m"(C),"m"(i)
+         :"eax","edi","esi","ebx","ecx","edx","memory"
         );
 #endif
 #endif
@@ -253,10 +251,11 @@ void scrt(_MIPD_ small_chinese *c,mr_utype *u,big x)
     convert(_MIPP_ 1,x);
     mr_pmul(_MIPP_ x,(mr_small)V[0],x);
     convert(_MIPP_ 1,mr_mip->w5);
-    for (j=1;j<c->NP;j++)
+    for (j=1;j<len;j++)
     {
         mr_pmul(_MIPP_ mr_mip->w5,(mr_small)(M[j-1]),mr_mip->w5);
         mr_pmul(_MIPP_ mr_mip->w5,(mr_small)(V[j]),mr_mip->w0);
         mr_padd(_MIPP_ x,mr_mip->w0,x);         
     } 
 }
+
