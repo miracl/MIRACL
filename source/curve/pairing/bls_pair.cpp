@@ -1,5 +1,6 @@
 /***************************************************************************
-                                                                           *
+This file has been modified by Raytheon BBN Technologies - January 2013.   *
+
 Copyright 2013 CertiVox IOM Ltd.                                           *
                                                                            *
 This file is part of CertiVox MIRACL Crypto SDK.                           *
