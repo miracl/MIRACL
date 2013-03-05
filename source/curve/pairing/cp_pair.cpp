@@ -1,51 +1,10 @@
-
-/***************************************************************************
-This file has been modified by Raytheon BBN Technologies - January 2013.   *
-																		   *
-Copyright 2013 CertiVox IOM Ltd.                                           *
-                                                                           *
-This file is part of CertiVox MIRACL Crypto SDK.                           *
-                                                                           *
-The CertiVox MIRACL Crypto SDK provides developers with an                 *
-extensive and efficient set of cryptographic functions.                    *
-For further information about its features and functionalities please      *
-refer to http://www.certivox.com                                           *
-                                                                           *
-* The CertiVox MIRACL Crypto SDK is free software: you can                 *
-  redistribute it and/or modify it under the terms of the                  *
-  GNU Affero General Public License as published by the                    *
-  Free Software Foundation, either version 3 of the License,               *
-  or (at your option) any later version.                                   *
-                                                                           *
-* The CertiVox MIRACL Crypto SDK is distributed in the hope                *
-  that it will be useful, but WITHOUT ANY WARRANTY; without even the       *
-  implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. *
-  See the GNU Affero General Public License for more details.              *
-                                                                           *
-* You should have received a copy of the GNU Affero General Public         *
-  License along with CertiVox MIRACL Crypto SDK.                           *
-  If not, see <http://www.gnu.org/licenses/>.                              *
-                                                                           *
-You can be released from the requirements of the license by purchasing     *
-a commercial license. Buying such a license is mandatory as soon as you    *
-develop commercial activities involving the CertiVox MIRACL Crypto SDK     *
-without disclosing the source code of your own applications, or shipping   *
-the CertiVox MIRACL Crypto SDK with a closed source product.               *
-                                                                           *
-***************************************************************************/
 /*
+
+This file has been modified by Raytheon BBN Technologies - January 2013. 
+
+ * cp_pair.cpp
  *
- * mnt_pair.cpp
- *
- * MNT curve, ate pairing embedding degree 6, ideal for security level AES-80
- *
- * 
- *  Irreducible binomial MUST be of the form x^6+2. This excludes many of the curves
- *  found using the mnt utility!
- *  NOTE: This version uses a "compositum". That is the ZZn6 class is a cubic tower over ZZn2, but can
- *  also be considered as a quadratic tower over ZZn3. The routine shuffle converts from one form to the other.
- *  The former is fastest for ZZn6 arithmetic, the latter form is required for handling the second parameter
- *  to the pairing, which is on the quadratic twist E(Fp3)
+ * Cocks-Pinch curve, Tate pairing embedding degree 2, ideal for security level AES-80
  *
  * Provides high level interface to pairing functions
  * 
@@ -53,20 +12,21 @@ the CertiVox MIRACL Crypto SDK with a closed source product.               *
  *
  * This is calculated on a Pairing Friendly Curve (PFC), which must first be defined.
  *
- * G1 is a point over the base field, and G2 is a point over an extension field of degree 3
- * GT is a finite field point over the 6-th extension, where 6 is the embedding degree.
+ * G1 is a point over the base field, G2 is a point on the quadratic twist
+ * GT is a finite field point over the 2nd extension, where 2 is the embedding degree.
  *
  */
 
-#define MR_PAIRING_MNT
+#define MR_PAIRING_CP
 #include "pairing_3.h"
 
+// Cocks-Pinch curve parameters, A,B and n, where p=3 mod 4
 // AES_SECURITY=80 bit curve
-// MNT curve parameters, x,A,B
-// Thanks to Drew Sutherland for providing the MNT curve
-// irreducible poly is x^6+2
-static char param[]="-D285DA0CFEF02F06F812";
-static char curveB[]="77479D33943B5B1F590B54258B72F316B3261D45";
+// Curve E:y^2=x^3-3x+B, #E=COF*order, modulus p
+
+static char MODtext[]="8D5006492B424C09D2FEBE717EE382A57EBE3A352FC383E1AC79F21DDB43706CFB192333A7E9CF644636332E83D90A1E56EFBAE8715AA07883483F8267E80ED3";
+static char Btext[]="609993837367998001C95B87A6BA872135E26906DB4C192D6E038486177A3EDF6C50B9BB20DF881F2BD05842F598F3E037B362DBF89F0A62E5871D41D951BF8E";
+static char COFtext[]="11AA00C9256849813A5FD7CE2FDC7054AFD7809E7F7FD948C4B9C1C1E76FFEFF4ECAB83C950112DECB41D6EDA";
 
 void read_only_error(void)
 {
@@ -74,46 +34,28 @@ void read_only_error(void)
 	exit(0);
 }
 
-void set_frobenius_constant(ZZn2 &X)
-{
-    Big p=get_modulus();
-    switch (get_mip()->pmod8)
-    {
-    case 5:
-         X.set((Big)0,(Big)1); // = (sqrt(-2)^(p-1)/2     
-         break;
-    case 3:                     // = (1+sqrt(-1))^(p-1)/2                                
-         X.set((Big)1,(Big)1);      
-         break;
-   case 7: 
-         X.set((Big)2,(Big)1); // = (2+sqrt(-1))^(p-1)/2
-    default: break;
-    }
-    X=pow(X,(p-1)/3);
-}
-
-// Using SHA as basic hash algorithm
+// Using SHA256 as basic hash algorithm
 //
 // Hash function
 // 
 
-#define HASH_LEN 20
+#define HASH_LEN 32
 
 Big H1(char *string)
 { // Hash a zero-terminated string to a number < modulus
     Big h,p;
     char s[HASH_LEN];
     int i,j; 
-    sha sh;
+    sha256 sh;
 
-    shs_init(&sh);
+    shs256_init(&sh);
 
     for (i=0;;i++)
     {
         if (string[i]==0) break;
-        shs_process(&sh,string[i]);
+        shs256_process(&sh,string[i]);
     }
-    shs_hash(&sh,s);
+    shs256_hash(&sh,s);
     p=get_modulus();
     h=1; j=0; i=1;
     forever
@@ -129,64 +71,31 @@ Big H1(char *string)
 
 void PFC::start_hash(void)
 {
-	shs_init(&SH);
+	shs256_init(&SH);
 }
 
 Big PFC::finish_hash_to_group(void)
 {
 	Big hash;
 	char s[HASH_LEN];
-    shs_hash(&SH,s);
+    shs256_hash(&SH,s);
     hash=from_binary(HASH_LEN,s);
 	return hash%(*ord);
 }
 
 void PFC::add_to_hash(const GT& x)
-{
-	ZZn6 u=x.g;
-	ZZn2 v;
-	ZZn l,h;
-	Big a,xx[2];
-	int i,j,m;
-
-	u.get(v);
-	v.get(l,h);
-	xx[0]=l; xx[1]=h;
-
-    for (i=0;i<2;i++)
-    {
-        a=xx[i];
-        while (a>0)
-        {
-            m=a%256;
-            shs_process(&SH,m);
-            a/=256;
-        }
-    }
-
-}
-
-void PFC::add_to_hash(const G2& x)
-{
-	ZZn3 X,Y;
-	ECn3 v=x.g;
+{ // compress it and add
+	ZZn2 u=x.g;
 	Big a;
-	ZZn xx[6];
+	int m;
 
-	int i,m;
-
-	v.get(X,Y);
-	X.get(xx[0],xx[1],xx[2]);
-	Y.get(xx[3],xx[4],xx[5]);
-	for (i=0;i<6;i++)
+	u.get(a);
+ 
+    while (a>0)
     {
-        a=(Big)xx[i];
-        while (a>0)
-        {
-            m=a%256;
-            shs_process(&SH,m);
-            a/=256;
-        }
+        m=a%256;
+        shs256_process(&SH,m);
+        a/=256;
     }
 }
 
@@ -199,14 +108,35 @@ void PFC::add_to_hash(const G1& x)
     while (a>0)
     {
         m=a%256;
-        shs_process(&SH,m);
+        shs256_process(&SH,m);
         a/=256;
     }
 	a=Y;
     while (a>0)
     {
         m=a%256;
-        shs_process(&SH,m);
+        shs256_process(&SH,m);
+        a/=256;
+    }
+}
+
+void PFC::add_to_hash(const G2& x)
+{
+	Big a,X,Y;
+	int i,m;
+	x.g.get(X,Y);
+	a=X;
+    while (a>0)
+    {
+        m=a%256;
+        shs256_process(&SH,m);
+        a/=256;
+    }
+	a=Y;
+    while (a>0)
+    {
+        m=a%256;
+        shs256_process(&SH,m);
         a/=256;
     }
 }
@@ -218,36 +148,28 @@ void PFC::add_to_hash(const Big& x)
     while (a>0)
     {
         m=a%256;
-        shs_process(&SH,m);
+        shs256_process(&SH,m);
         a/=256;
     }
 }
 
-Big H2(ZZn6 y)
-{ // Hash and compress an Fp6 to a big number
-    sha sh;
-    ZZn u,v,w;
-	ZZn2 x;
-    Big a,h,xx[2];
+Big H2(ZZn2 y)
+{ // Hash and compress an Fp2 to a big number
+    sha256 sh;
+    Big a,h;
     char s[HASH_LEN];
-    int i,j,m;
+    int m;
 
-    shs_init(&sh);
-	y.get(x);
-    x.get(u,v);
-    xx[0]=u; xx[1]=v;
+    shs256_init(&sh);
+	y.get(a);
    
-    for (i=0;i<2;i++)
+    while (a>0)
     {
-        a=xx[i];
-        while (a>0)
-        {
-            m=a%256;
-            shs_process(&sh,m);
-            a/=256;
-        }
+        m=a%256;
+        shs256_process(&sh,m);
+        a/=256;
     }
-    shs_hash(&sh,s);
+    shs256_hash(&sh,s);
     h=from_binary(HASH_LEN,s);
     return h;
 }
@@ -287,57 +209,12 @@ void extract(ECn& A,ZZn& x,ZZn& y)
     y=(A.get_point())->Y;
 }
 
-
-ZZn6 shuffle(const ZZn3 &first, const ZZn3 &second)
-{ // shuffle from a pair ZZn3's to three ZZn2's, as required by ZZn6
-	ZZn6 w;
-	ZZn x0,x1,x2,x3,x4,x5;
-	ZZn2 t0,t1,t2;
-	first.get(x0,x2,x4);
-	second.get(x1,x3,x5);
-	t0.set(x0,x3);
-	t1.set(x1,x4);
-	t2.set(x2,x5);
-	w.set(t0,t1,t2);
-	return w;
-}
-
-void unshuffle(ZZn6 &S,ZZn3 &first,ZZn3 &second)
-{ // unshuffle a ZZn6 into two ZZn3's 
-	ZZn x0,x1,x2,x3,x4,x5;
-	ZZn2 t0,t1,t2;
-	S.get(t0,t1,t2);
-	t0.get(x0,x3);
-	t1.get(x1,x4);
-	t2.get(x2,x5);
-	first.set(x0,x2,x4);
-	second.set(x1,x3,x5);
-}
-
-// Calculate q*P. P(X,Y) -> P(X^p,Y^p))
-
-void q_power_frobenius(ECn3 &S,ZZn2& X)
-{
-	ZZn6 X1,X2,Y1,Y2;
-	ZZn3 Sx,Sy,T;
-
-	int qnr=get_mip()->cnr;
-
-	S.get(Sx,Sy);
-
-	// untwist    
-    Sx=Sx/qnr;
-    Sy=tx(Sy);
-    Sy=Sy/(qnr*qnr);
-
-	X1=shuffle(Sx,(ZZn3)0); Y1=shuffle((ZZn3)0,Sy);
-	X1.powq(X); Y1.powq(X);
-	unshuffle(X1,Sx,T); unshuffle(Y1,T,Sy);
-	
-	// twist
-	Sx=qnr*Sx;
-	Sy=txd(Sy*qnr*qnr);
-	S.set(Sx,Sy);
+void extractZ(ECn& A,ZZn& z)
+{ 
+    big t;
+    t=(A.get_point())->Z;
+    if (A.get_status()!=MR_EPOINT_GENERAL) z=1;
+    else                                   z=t;
 }
 
 //
@@ -347,33 +224,34 @@ void q_power_frobenius(ECn3 &S,ZZn2& X)
 // Now evaluate at Q -> return (Qy-y)-slope.(Qx-x)
 //
 
-ZZn6 line(ECn3& A,ECn3& C,ECn3& B,int type,ZZn3& slope,ZZn3& ex1,ZZn3& ex2,ZZn& Px,ZZn& Py)
-{
-    ZZn6 w;
-	ZZn3 d;
-    ZZn3 x,y;
-#ifdef MR_ECN3_PROJECTIVE
-	ZZn3 z,z3,t;
-	C.getZ(z3);
-	d.set1(Py);
+ZZn2 line(ECn& A,ECn& C,ECn& B,int type,ZZn& slope,ZZn& ex1,ZZn& ex2,ZZn& Px,ZZn& Py)
+{ 
+    ZZn2 w;
+    ZZn x,y,z3;
 
-	if (type==MR_ADD)
-	{ // exploit that B is in affine
-		ZZn3 x2,y2;
-		B.get(x2,y2);
-		y2*=z3; d*=z3; 
-		w=shuffle(y2-slope*(Px+x2),d);
-	}
-	if (type==MR_DOUBLE)
-	{ // use extra information from point doubling
-		A.get(x,y,z);
-		w=shuffle(ex1-slope*(Px*ex2+x),d*z3*ex2);	
-	}
-#else	
-	A.get(x,y);
-    d.set1(Py);
-	w=shuffle(y-slope*(Px+x),d);
-#endif
+	extractZ(C,z3);
+    if (type==MR_ADD)
+    {
+       extract(B,x,y);
+       w.set(slope*(x+Px)-z3*y,z3*Py);
+    } 
+    if (type==MR_DOUBLE)
+    { 
+       extract(A,x,y);
+       w.set(-(slope*ex2)*Px-slope*x+ex1,-(z3*ex2)*Py);
+    }
+
+/*
+    extract(A,x,y,z);     
+    x*=z; t=z; z*=z; z*=t;       // 9 ZZn muls   
+    n*=z; n+=x; n*=slope;
+	d*=z; w.set(-y,d);
+    extractZ(C,z3);
+
+    w*=z3; w+=n;
+*/
+
+//	w.set(Px*z*z*z*slope+slope*x*z-y*z3,Py*z*z*z*z3);
     return w;
 }
 
@@ -382,26 +260,29 @@ ZZn6 line(ECn3& A,ECn3& C,ECn3& B,int type,ZZn3& slope,ZZn3& ex1,ZZn3& ex2,ZZn& 
 // Return line function value
 //
 
-ZZn6 g(ECn3& A,ECn3& B,ZZn& Px,ZZn& Py)
+ZZn2 g(ECn& A,ECn& B,ZZn& Px,ZZn& Py)
 {
-    BOOL type;
-    ZZn3 lam,ex1,ex2;
-    ECn3 Q=A;
+    int type;
+    ZZn  lam,extra1,extra2;
+    ZZn2 u;
+    ECn P=A;
+    big ptr,ex1,ex2;
 
-// Evaluate line from A to A+B
-    type=A.add(B,lam,&ex1,&ex2);
-
-    return line(Q,A,B,type,lam,ex1,ex2,Px,Py);
+    type=A.add(B,&ptr,&ex1,&ex2);
+    if (!type) return (ZZn2)1;
+    lam=ptr;
+	extra1=ex1;
+	extra2=ex2;
+    
+    return line(P,A,B,type,lam,extra1,extra2,Px,Py);
 }
 
 // if multiples of G2 can be precalculated, its a lot faster!
 
-ZZn6 gp(ZZn3* ptable,int &j,ZZn& Px,ZZn& Py)
+ZZn2 gp(ZZn* ptable,int &j,ZZn& Px,ZZn& Py)
 {
-	ZZn6 w;
-	ZZn3 d;
-	d.set1(Py);
-	w=shuffle(ptable[j]*Px+ptable[j+1],d);
+	ZZn2 w;
+	w.set(ptable[j]*Px+ptable[j+1],Py);
 	j+=2;
 	return w;
 }
@@ -412,25 +293,17 @@ ZZn6 gp(ZZn3* ptable,int &j,ZZn& Px,ZZn& Py)
 
 int PFC::spill(G2& w,char *& bytes)
 {
-	int i,j,len,m;
+	int i,j,n=2*(bits(*ord-1)-2+ham(*ord));
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	
-	ZZn a,b,c;
-	Big X=*x;
+	int len=n*bytes_per_big;
+	Big x;
 	if (w.ptable==NULL) return 0;
 
-	m=2*(bits(X)-2+ham(X));
-	len=m*3*bytes_per_big;
-
 	bytes=new char[len];
-	for (i=j=0;i<m;i++)
+	for (i=j=0;i<n;i++)
 	{
-		w.ptable[i].get(a,b,c);
-		to_binary((Big)a,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		to_binary((Big)b,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		to_binary((Big)c,bytes_per_big,&bytes[j],TRUE);
+		x=w.ptable[i];
+		to_binary(x,bytes_per_big,&bytes[j],TRUE);
 		j+=bytes_per_big;
 	}
 
@@ -445,66 +318,62 @@ int PFC::spill(G2& w,char *& bytes)
 
 void PFC::restore(char * bytes,G2& w)
 {
-	int i,j,len,m;
+	int i,j,n=2*(bits(*ord-1)-2+ham(*ord));
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	
-	ZZn a,b,c;
-	Big X=*x;
+	int len=n*bytes_per_big;
+	Big x;
+
 	if (w.ptable!=NULL) return;
 
-	m=2*(bits(X)-2+ham(X));
-	len=m*3*bytes_per_big;
-
-	w.ptable=new ZZn3[m];
-	for (i=j=0;i<m;i++)
+	w.ptable=new ZZn[n];
+	for (i=j=0;i<n;i++)
 	{
-		a=from_binary(bytes_per_big,&bytes[j]);
+		x=from_binary(bytes_per_big,&bytes[j]);
+		w.ptable[i]=x;
 		j+=bytes_per_big;
-		b=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		c=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		w.ptable[i].set(a,b,c);
 	}
 	for (i=0;i<len;i++) bytes[i]=0;
-	
 	delete [] bytes;
 }
+
 
 // precompute G2 table for pairing
 
 int PFC::precomp_for_pairing(G2& w)
 {
-	int i,j,nb,type,len;
-	ECn3 A,Q,B;
-	ZZn3 lam,x1,y1;
-	Big X=*x;
+	int i,j,nb,len;
+	ECn A,Q,B;
+	ZZn lam,x,y;
+	big ptr;
+	Big iters=*ord-1;
 	
 	A=w.g;
-	A.norm();
+	normalise(A);
 	B=A;
-	nb=bits(X);
+	nb=bits(iters);
 	j=0;
-	len=2*(nb-2+ham(X));
-	w.ptable=new ZZn3[len];
-	get_mip()->coord=MR_AFFINE;  // switch to affine
+	len=2*(nb-2+ham(*ord));
+	w.ptable=new ZZn[len];
+	get_mip()->coord=MR_AFFINE;
     for (i=nb-2;i>=0;i--)
     {
 		Q=A;
 // Evaluate line from A to A+B
-		A.add(A,lam,NULL,NULL);
-		Q.get(x1,y1);
-		w.ptable[j++]=-lam; w.ptable[j++]=y1-lam*x1; 
+		A.add(A,&ptr);
+		lam=ptr;
+		extract(Q,x,y);
+		w.ptable[j++]=lam; w.ptable[j++]=lam*x-y; 
 
-		if (bit(X,i)==1)
+		if (bit(iters,i)==1)
 		{
 			Q=A;
-			type=A.add(B,lam,NULL,NULL);
-			Q.get(x1,y1);
-			w.ptable[j++]=-lam; w.ptable[j++]=y1-lam*x1; 
+			A.add(B,&ptr);
+			lam=ptr;
+			extract(Q,x,y);
+			w.ptable[j++]=lam; w.ptable[j++]=lam*x-y; 
 		}
     }
-	get_mip()->coord=MR_PROJECTIVE; 
+	get_mip()->coord=MR_PROJECTIVE;
 	return len;
 }
 
@@ -513,36 +382,28 @@ GT PFC::multi_miller(int n,G2** QQ,G1** PP)
 	GT z;
     ZZn *Px,*Py;
 	int i,j,*k,nb;
-    ECn3 *Q,*A;
+    ECn *Q,*A;
 	ECn P;
-    ZZn6 res;
-	Big X=*x;
+    ZZn2 res;
+	Big iters=*ord-1;
 
 	Px=new ZZn[n];
 	Py=new ZZn[n];
-	Q=new ECn3[n];
-	A=new ECn3[n];
+	Q=new ECn[n];
+	A=new ECn[n];
 	k=new int[n];
 
-    nb=bits(X);
+    nb=bits(iters);
 	res=1;  
 
 	for (j=0;j<n;j++)
 	{
 		k[j]=0;
-		P=PP[j]->g; normalise(P); Q[j]=QQ[j]->g; 
+		P=PP[j]->g; normalise(P); Q[j]=QQ[j]->g; normalise(Q[j]);
 		extract(P,Px[j],Py[j]);
-		Px[j]+=Px[j];
-		Py[j]+=Py[j];
 	}
 
-	for (j=0;j<n;j++)
-	{
-#ifdef MR_ECN3_PROJECTIVE
-		Q[j].norm();
-#endif
-		A[j]=Q[j];
-	}
+	for (j=0;j<n;j++) A[j]=Q[j];
 
 	for (i=nb-2;i>=0;i--)
 	{
@@ -554,7 +415,7 @@ GT PFC::multi_miller(int n,G2** QQ,G1** PP)
 			else
 				res*=gp(QQ[j]->ptable,k[j],Px[j],Py[j]);
 		}
-		if (bit(X,i)==1)
+		if (bit(iters,i)==1)
 			for (j=0;j<n;j++) 
 			{
 				if (QQ[j]->ptable==NULL)
@@ -576,41 +437,35 @@ GT PFC::multi_miller(int n,G2** QQ,G1** PP)
 }
 
 //
-// R-ate Pairing G2 x G1 -> GT
+// Tate Pairing G1 x G1 -> GT
 //
-// P is a point of order q in G1. Q(x,y) is a point of order q in G2. 
-// Note that Q is a point on the sextic twist of the curve over Fp^2, P(x,y) is a point on the 
-// curve over the base field Fp
+// P and Q are points of order q in G1. 
 //
 
 GT PFC::miller_loop(const G2& QQ,const G1& PP)
 { 
 	GT z;
     int i,j,n,nb,nbw,nzs;
-    ECn3 A,Q;
+    ECn A,Q;
 	ECn P;
 	ZZn Px,Py;
 	BOOL precomp;
-    ZZn6 res;
-	Big X=*x;
+    ZZn2 res;
+	Big iters=*ord-1; // can omit last addition
 
 	P=PP.g; Q=QQ.g;
-#ifdef MR_ECN3_PROJECTIVE
-	Q.norm();
-#endif
 	precomp=FALSE;
 	if (QQ.ptable!=NULL) precomp=TRUE;
 
 	normalise(P);
+	normalise(Q);
 	extract(P,Px,Py);
-
-    Px+=Px;  // because x^6+2 is irreducible.. simplifies line function calculation
-    Py+=Py; 
+	//Px=-Px;
 
     res=1;  
     A=Q;    // reset A
-    nb=bits(X);
-	res.mark_as_miller();
+    nb=bits(iters);
+
 	j=0;
 
     for (i=nb-2;i>=0;i--)
@@ -619,7 +474,7 @@ GT PFC::miller_loop(const G2& QQ,const G1& PP)
 		if (precomp) res*=gp(QQ.ptable,j,Px,Py);
 		else         res*=g(A,A,Px,Py);
 
-		if (bit(X,i)==1)
+		if (bit(iters,i)==1)
 		{
 			if (precomp) res*=gp(QQ.ptable,j,Px,Py);
 			else         res*=g(A,Q,Px,Py);
@@ -633,28 +488,11 @@ GT PFC::miller_loop(const G2& QQ,const G1& PP)
 GT PFC::final_exp(const GT& z)
 {
 	GT y;
-	ZZn6 w,res;
-	Big X=*x;
+	ZZn2 res;
 
 	res=z.g;
-
-    w=res;   
-    w.powq(*frob);
-    res*=w;                        // ^(p+1)
-
-    w=res;
-    w.powq(*frob); w.powq(*frob); w.powq(*frob);
-    res=w/res;                     // ^(p^3-1)
-
-// exploit the clever "trick" for a half-length exponentiation!
-
-    res.mark_as_unitary();
-
-    w=res;
-    res.powq(*frob);  // res*=res;  // res=pow(res,CF);
- 
-    if (X<0) res/=powu(w,-X);
-    else res*=powu(w,X);
+	res=conj(res)/res;
+    res=pow(res,(*mod+1)/(*ord));   // raise to power of (p^2-1)/q
 
     y.g=res;
 
@@ -664,12 +502,14 @@ GT PFC::final_exp(const GT& z)
 PFC::PFC(int s, csprng *rng)
 {
 	int mod_bits,words;
+
 	if (s!=80)
 	{
 		cout << "No suitable curve available" << endl;
 		exit(0);
 	}
-	mod_bits=2*s;
+
+	mod_bits=512;
 
 	if (mod_bits%MIRACL==0)
 		words=(mod_bits/MIRACL);
@@ -684,43 +524,35 @@ PFC::PFC(int s, csprng *rng)
 #endif
 
 	B=new Big;
-	x=new Big;
 	mod=new Big;
 	ord=new Big;
 	cof=new Big;
 	npoints=new Big;
 	trace=new Big;
-	frob=new ZZn2;
 
-	*B=curveB;
+	*B=Btext;
+
+	*cof=COFtext;
+	*ord=pow((Big)2,159)+pow((Big)2,17)+1;
+	*npoints=*cof*(*ord);
+
 	S=s;
-	*x=param;
-	Big X=*x;
+	*mod=MODtext;
+	*trace=*mod+1-*npoints;
 
-	*mod=X*X+1;
-	*npoints=X*X-X+1;
-	*trace=X+1;
-	*cof=X*X+X+1;
-	*ord=*npoints;
 	ecurve(-3,*B,*mod,MR_PROJECTIVE);
-	set_frobenius_constant(*frob);
-	Big sru=pow((ZZn)-2,(*mod-1)/6);   // x^6+2 is irreducible
-    set_zzn3(-2,sru);
-	mip->TWIST=MR_QUADRATIC;   // twisted curve E'(ZZn3)
 
-	RNG = rng;
+	RNG=rng;
 }
 
 PFC::~PFC()
 {
 	delete B;
-	delete x;
 	delete mod;
 	delete ord;
 	delete cof;
 	delete npoints;
 	delete trace;
-	delete frob;
 	mirexit();
 }
 
@@ -729,10 +561,11 @@ G1 PFC::mult(const G1& w,const Big& k)
 	G1 z;
 	if (w.mtable!=NULL)
 	{ // we have precomputed values
+
 		Big e=k;
 		if (k<0) e=-e;
 
-		int i,j,t=w.mtbits; //MR_ROUNDUP(2*S,WINDOW_SIZE); 
+		int i,j,t=w.mtbits; // MR_ROUNDUP(2*S,WINDOW_SIZE); 
 		j=recode(e,t,WINDOW_SIZE,t-1);
 		z.g=w.mtable[j];
 		for (i=t-2;i>=0;i--)
@@ -751,18 +584,16 @@ G1 PFC::mult(const G1& w,const Big& k)
 	return z;
 }
 
-// GLV + Galbraith-Scott
-
 G2 PFC::mult(const G2& w,const Big& k)
 {
 	G2 z;
-	Big X=*x;
 	if (w.mtable!=NULL)
 	{ // we have precomputed values
+
 		Big e=k;
 		if (k<0) e=-e;
 
-		int i,j,t=w.mtbits; //MR_ROUNDUP(2*S,WINDOW_SIZE); 
+		int i,j,t=w.mtbits; // MR_ROUNDUP(2*S,WINDOW_SIZE); 
 		j=recode(e,t,WINDOW_SIZE,t-1);
 		z.g=w.mtable[j];
 		for (i=t-2;i>=0;i--)
@@ -775,25 +606,20 @@ G2 PFC::mult(const G2& w,const Big& k)
 	}
 	else
 	{
-		ECn3 v=w.g;
-		q_power_frobenius(v,*frob);
-		z.g=mul(v,k/X,w.g,k%X);
+		z.g=w.g;
+		z.g*=k;
 	}
 	return z;
 }
 
-// GLV method + Galbraith-Scott idea
-
 GT PFC::power(const GT& w,const Big& k)
 {
 	GT z;
-	Big X=*x;
+	Big e=k;
+	if (k<0) e=-e;
 	if (w.etable!=NULL)
 	{ // precomputation is available
-		Big e=k;
-		if (k<0) e=-e;
-
-		int i,j,t=w.etbits; //MR_ROUNDUP(2*S,WINDOW_SIZE); 
+		int i,j,t=w.etbits;  //MR_ROUNDUP(2*S,WINDOW_SIZE); 
 		j=recode(e,t,WINDOW_SIZE,t-1);
 		z.g=w.etable[j];
 		for (i=t-2;i>=0;i--)
@@ -802,56 +628,16 @@ GT PFC::power(const GT& w,const Big& k)
 			z.g*=z.g;
 			if (j>0) z.g*=w.etable[j];
 		}
-		if (k<0) z.g=inverse(z.g);
 	}
 	else
 	{
-		ZZn6 y=w.g;
-		y.powq(*frob);
-		z.g=powu(y,k/X,w.g,k%X);
+		z.g=powu(w.g,e);
 	}
+	if (k<0) z.g=conj(z.g);
 	return z;
 }
 
-// Use Scott et al. idea - http://eprint.iacr.org/2008/530.pdf
-// Map to point of correct order
-
-void map(ECn3 &S,Big x, ZZn2& X)
-{ // S=Phi(2xP)+phi^2(2xP)
-	ZZn6 X1,X2,Y1,Y2;
-	ZZn3 Sx,Sy,T;
-	ECn3 S2;
-	int qnr=get_mip()->cnr;
-
-	S*=x; S+=S; // hard work done here
-
-	S.get(Sx,Sy);
-
-	// untwist    
-    Sx=Sx/qnr;
-    Sy=tx(Sy);
-    Sy=Sy/(qnr*qnr);
-
-	X1=shuffle(Sx,(ZZn3)0); Y1=shuffle((ZZn3)0,Sy);
-	X1.powq(X); Y1.powq(X);
-	X2=X1; Y2=Y1;
-	X2.powq(X); Y2.powq(X);
-	unshuffle(X1,Sx,T); unshuffle(Y1,T,Sy);
-	
-	// twist
-	Sx=qnr*Sx;
-	Sy=txd(Sy*qnr*qnr);
-	S.set(Sx,Sy);
-	unshuffle(X2,Sx,T); unshuffle(Y2,T,Sy);
-
-	//twist (again, like we did last summer...)
-	Sx=qnr*Sx;
-	Sy=txd(Sy*qnr*qnr);
-	S2.set(Sx,Sy);
-	S+=S2;
-}
-
-// random group element
+// random group member
 
 void PFC::random(Big& w)
 {
@@ -863,52 +649,28 @@ void PFC::random(Big& w)
 
 void PFC::rankey(Big& k)
 {
-		if (RNG==NULL) k=rand(S,2);
-		else k=strong_rand(RNG,S,2);
+	if (RNG==NULL)	k=rand(S,2);
+	else k=strong_rand(RNG,S,2);
 }
 
-void PFC::hash_and_map(G2& w,char *ID)
-{
-    int i;
-    ZZn3 XX;
-	Big X=*x;
- 
-    Big x0=H1(ID);
-    forever
-    {
-        x0+=1;
-        XX.set2((ZZn)x0);
-        if (!w.g.set(XX)) continue;
-
-        break;
-    }
-	map(w.g,X,*frob);
-}
-
-void PFC::random(G2& w)
-{
-    int i;
-    ZZn3 XX;
-	Big X=*x;
-	Big x0;
- 
-    if (RNG==NULL) x0=rand(*mod);
-	else x0=strong_rand(RNG,*mod);
-    forever
-    {
-        x0+=1;
-        XX.set2((ZZn)x0);
-        if (!w.g.set(XX)) continue;
-
-        break;
-    }
-	map(w.g,X,*frob);
-}
+// Can be done deterministicly
 
 void PFC::hash_and_map(G1& w,char *ID)
 {
     Big x0=H1(ID);
     while (!w.g.set(x0,x0)) x0+=1;
+	w.g*=*cof;
+}
+
+void PFC::hash_and_map(G2& w,char *ID)
+{
+    Big x0=H1(ID);
+	*B=-(*B);
+	ecurve((Big)-3,*B,*mod,MR_PROJECTIVE);  // move to twist
+    while (!w.g.set(x0,x0)) x0+=1;
+	w.g*=(*mod+1+*trace)/(*ord);
+	*B=-(*B);
+	ecurve((Big)-3,*B,*mod,MR_PROJECTIVE);  // move back
 }
 
 void PFC::random(G1& w)
@@ -916,8 +678,22 @@ void PFC::random(G1& w)
 	Big x0;
 	if (RNG==NULL) x0=rand(*mod);
 	else x0=strong_rand(RNG,*mod);
-
 	while (!w.g.set(x0,x0)) x0+=1;
+	w.g*=*cof;
+}
+
+void PFC::random(G2& w)
+{
+	Big x0;
+	if (RNG==NULL) x0=rand(*mod);
+	else x0=strong_rand(RNG,*mod);
+
+	*B=-(*B);
+	ecurve((Big)-3,*B,*mod,MR_PROJECTIVE);  // move to twist
+    while (!w.g.set(x0,x0)) x0+=1;
+	w.g*=(*mod+1+*trace)/(*ord);
+	*B=-(*B);
+	ecurve((Big)-3,*B,*mod,MR_PROJECTIVE);  // move back
 }
 
 Big PFC::hash_to_aes_key(const GT& w)
@@ -942,7 +718,7 @@ GT operator*(const GT& x,const GT& y)
 GT operator/(const GT& x,const GT& y)
 {
 	GT z=x;
-	z.g/=y.g;
+	z.g*=conj(y.g); // elements in GT are unitary
 	return z; 
 }
 
@@ -954,8 +730,7 @@ int GT::spill(char *& bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*6*bytes_per_big;
-	ZZn2 a,b,c;
+	int len=n*2*bytes_per_big;
 	Big x,y;
 
 	if (etable==NULL) return 0;
@@ -963,18 +738,7 @@ int GT::spill(char *& bytes)
 	bytes=new char[len];
 	for (i=j=0;i<n;i++)
 	{
-		etable[i].get(a,b,c);
-		a.get(x,y);
-		to_binary(x,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		to_binary(y,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		b.get(x,y);
-		to_binary(x,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		to_binary(y,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		c.get(x,y);
+		etable[i].get(x,y);
 		to_binary(x,bytes_per_big,&bytes[j],TRUE);
 		j+=bytes_per_big;
 		to_binary(y,bytes_per_big,&bytes[j],TRUE);
@@ -985,6 +749,10 @@ int GT::spill(char *& bytes)
 	return len;
 }
 
+//
+// restore precomputation for GT from byte array
+//
+
 /*
  *  jkhoury@bbn.com
  *  Serialization method for the points
@@ -994,24 +762,12 @@ int GT::serialize(char *& bytes)
 {
 	int j=0;
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=6*bytes_per_big;
-	ZZn2 a,b,c;
+	int len=2*bytes_per_big;
 	Big x,y;
 
 	bytes=new char[len];
 
-	g.get(a,b,c);
-	a.get(x,y);
-	to_binary(x,bytes_per_big,&bytes[j],TRUE);
-	j+=bytes_per_big;
-	to_binary(y,bytes_per_big,&bytes[j],TRUE);
-	j+=bytes_per_big;
-	b.get(x,y);
-	to_binary(x,bytes_per_big,&bytes[j],TRUE);
-	j+=bytes_per_big;
-	to_binary(y,bytes_per_big,&bytes[j],TRUE);
-	j+=bytes_per_big;
-	c.get(x,y);
+	g.get(x,y);
 	to_binary(x,bytes_per_big,&bytes[j],TRUE);
 	j+=bytes_per_big;
 	to_binary(y,bytes_per_big,&bytes[j],TRUE);
@@ -1029,8 +785,7 @@ void GT::deserialize(char *bytes)
 {
 	int j=0;
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=6*bytes_per_big;
-	ZZn2 a,b,c;
+	int len=2*bytes_per_big;
 	Big x,y;
 	if (etable!=NULL){
 		delete [] etable;
@@ -1040,59 +795,30 @@ void GT::deserialize(char *bytes)
 	j+=bytes_per_big;
 	y=from_binary(bytes_per_big,&bytes[j]);
 	j+=bytes_per_big;
-	a.set(x,y);
-	x=from_binary(bytes_per_big,&bytes[j]);
-	j+=bytes_per_big;
-	y=from_binary(bytes_per_big,&bytes[j]);
-	j+=bytes_per_big;
-	b.set(x,y);
-	x=from_binary(bytes_per_big,&bytes[j]);
-	j+=bytes_per_big;
-	y=from_binary(bytes_per_big,&bytes[j]);
-	j+=bytes_per_big;
-	c.set(x,y);
-
-	g.set(a,b,c);
+	g.set(x,y);
 
 	delete [] bytes;
 }
-
-//
-// restore precomputation for GT from byte array
-//
 
 void GT::restore(char *bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*6*bytes_per_big;
-	ZZn2 a,b,c;
+	int len=n*2*bytes_per_big;
 	Big x,y;
 	if (etable!=NULL) return;
 
-	etable=new ZZn6[1<<WINDOW_SIZE];
+	etable=new ZZn2[1<<WINDOW_SIZE];
 	for (i=j=0;i<n;i++)
 	{
 		x=from_binary(bytes_per_big,&bytes[j]);
 		j+=bytes_per_big;
 		y=from_binary(bytes_per_big,&bytes[j]);
 		j+=bytes_per_big;
-		a.set(x,y);
-		x=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		y=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		b.set(x,y);
-		x=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		y=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		c.set(x,y);
-		etable[i].set(a,b,c);
+		etable[i].set(x,y);
 	}
 	delete [] bytes;
 }
-
 
 G1 operator+(const G1& x,const G1& y)
 {
@@ -1158,6 +884,7 @@ void G1::restore(char *bytes)
 	}
 	delete [] bytes;
 }
+
 
 /*
  *  jkhoury@bbn.com
@@ -1228,29 +955,21 @@ int G2::spill(char *& bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*6*bytes_per_big;
-	ZZn3 x,y;
-	ZZn a,b,c;
+	int len=n*2*bytes_per_big;
+	Big x,y;
 
 	if (mtable==NULL) return 0;
 
 	bytes=new char[len];
+
 	for (i=j=0;i<n;i++)
 	{
-		mtable[i].get(x,y);
-		x.get(a,b,c);
-		to_binary((Big)a,bytes_per_big,&bytes[j],TRUE);
+		mtable[i].get(x,y);		
+		to_binary(x,bytes_per_big,&bytes[j],TRUE);
+		x=from_binary(bytes_per_big,&bytes[j]);
+
 		j+=bytes_per_big;
-		to_binary((Big)b,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		to_binary((Big)c,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		y.get(a,b,c);
-		to_binary((Big)a,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		to_binary((Big)b,bytes_per_big,&bytes[j],TRUE);
-		j+=bytes_per_big;
-		to_binary((Big)c,bytes_per_big,&bytes[j],TRUE);
+		to_binary(y,bytes_per_big,&bytes[j],TRUE);
 		j+=bytes_per_big;
 	}
 	delete [] mtable; 
@@ -1266,117 +985,96 @@ void G2::restore(char *bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*6*bytes_per_big;
-	ZZn3 x,y;
-	ZZn a,b,c;
+	int len=n*2*bytes_per_big;
+	Big x,y,B;
 	if (mtable!=NULL) return;
 
-	mtable=new ECn3[1<<WINDOW_SIZE];
+	mtable=new ECn[1<<WINDOW_SIZE];
+	B=getB();
+	B=-B;
+	ecurve((Big)-3,B,get_modulus(),MR_PROJECTIVE);  // move to twist	
 	for (i=j=0;i<n;i++)
 	{
-		a=from_binary(bytes_per_big,&bytes[j]);
+		x=from_binary(bytes_per_big,&bytes[j]);
 		j+=bytes_per_big;
-		b=from_binary(bytes_per_big,&bytes[j]);
+		y=from_binary(bytes_per_big,&bytes[j]);
 		j+=bytes_per_big;
-		c=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		x.set(a,b,c);
-		a=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		b=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		c=from_binary(bytes_per_big,&bytes[j]);
-		j+=bytes_per_big;
-		y.set(a,b,c);
+
 		mtable[i].set(x,y);
+
 	}
+	B=-B;
+	ecurve((Big)-3,B,get_modulus(),MR_PROJECTIVE);  // move back
 	delete [] bytes;
 }
 
-/*
- *  jkhoury@bbn.com
- *  Serialization method for the  points
- *
- */
+//
+// jkhoury@bbn.com
+// serialize element to byte array
+//
+
 int G2::serialize(char *& bytes)
 {
 	int j=0;
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=6*bytes_per_big;
-	ZZn3 x,y;
-	ZZn a,b,c;
-
+	int len=2*bytes_per_big;
+	Big x,y;
 
 	bytes=new char[len];
 
+
 	g.get(x,y);
-	x.get(a,b,c);
-	to_binary((Big)a,bytes_per_big,&bytes[j],TRUE);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	//x=from_binary(bytes_per_big,&bytes[j]);
 	j+=bytes_per_big;
-	to_binary((Big)b,bytes_per_big,&bytes[j],TRUE);
-	j+=bytes_per_big;
-	to_binary((Big)c,bytes_per_big,&bytes[j],TRUE);
-	j+=bytes_per_big;
-	y.get(a,b,c);
-	to_binary((Big)a,bytes_per_big,&bytes[j],TRUE);
-	j+=bytes_per_big;
-	to_binary((Big)b,bytes_per_big,&bytes[j],TRUE);
-	j+=bytes_per_big;
-	to_binary((Big)c,bytes_per_big,&bytes[j],TRUE);
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
 	j+=bytes_per_big;
 
 	return len;
 }
-/*
- *  jkhoury@bbn.com
- *  Deserialization method for the points
- *  This will reset the element precomp
- *
- */
+
+// jkhoury@bbn.com
+// restore element from byte array
+// reset the precomp
+//
+
 void G2::deserialize(char *bytes)
 {
 	int j=0;
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=6*bytes_per_big;
-	ZZn3 x,y;
-	ZZn a,b,c;
+	int len=2*bytes_per_big;
+	Big x,y,B;
 	//reset precomp
 	if (mtable!=NULL){
 		delete [] mtable;
 		mtable=NULL;
 	}
 
-	a=from_binary(bytes_per_big,&bytes[j]);
+
+	B=getB();
+	B=-B;
+	ecurve((Big)-3,B,get_modulus(),MR_PROJECTIVE);  // move to twist
+
+	x=from_binary(bytes_per_big,&bytes[j]);
 	j+=bytes_per_big;
-	b=from_binary(bytes_per_big,&bytes[j]);
+	y=from_binary(bytes_per_big,&bytes[j]);
 	j+=bytes_per_big;
-	c=from_binary(bytes_per_big,&bytes[j]);
-	j+=bytes_per_big;
-	x.set(a,b,c);
-	a=from_binary(bytes_per_big,&bytes[j]);
-	j+=bytes_per_big;
-	b=from_binary(bytes_per_big,&bytes[j]);
-	j+=bytes_per_big;
-	c=from_binary(bytes_per_big,&bytes[j]);
-	j+=bytes_per_big;
-	y.set(a,b,c);
+
 	g.set(x,y);
 
+
+	B=-B;
+	ecurve((Big)-3,B,get_modulus(),MR_PROJECTIVE);  // move back
 	delete [] bytes;
 }
 
 BOOL PFC::member(const GT& z)
 {
-	ZZn6 r=z.g;
-	ZZn6 w=z.g;
-	Big X=*x;
-	if (!r.is_unitary()) return FALSE;
-	if (r*conj(r)!=(ZZn6)1) return FALSE; // not unitary
-	w.powq(*frob);
-	if (X<0) r=powu(inverse(r),-X);
-	else     r=powu(r,X);
-	if (r==w) return TRUE;
-	return FALSE;
+	ZZn2 r=z.g;
+
+	if (pow(r,*ord)!=(ZZn2)1) return FALSE;
+
+	return TRUE;
 }
 
 GT PFC::pairing(const G2& x,const G1& y)
@@ -1436,28 +1134,24 @@ int PFC::precomp_for_mult(G1& w,BOOL small)
 
 int PFC::precomp_for_mult(G2& w,BOOL small)
 {
-	ECn3 v;
-	
-	ZZn3 x,y;
+	ECn v;
 	int i,j,k,bp,is,t;
 	if (small) t=MR_ROUNDUP(2*S,WINDOW_SIZE);
 	else       t=MR_ROUNDUP(bits(*ord),WINDOW_SIZE);
-	w.g.norm();
+	normalise(w.g);
 	v=w.g;
-	w.mtable=new ECn3[1<<WINDOW_SIZE];
-	v.norm();
+	w.mtable=new ECn[1<<WINDOW_SIZE];
 	w.mtable[1]=v;
 	w.mtbits=t;
 	for (j=0;j<t;j++)
         v+=v;
     k=1;
-
     for (i=2;i<(1<<WINDOW_SIZE);i++)
     {
         if (i==(1<<k))
         {
             k++;
-			v.norm();
+			normalise(v);
 			w.mtable[i]=v;     
             for (j=0;j<t;j++)
 				v+=v;
@@ -1473,18 +1167,18 @@ int PFC::precomp_for_mult(G2& w,BOOL small)
 			}
             bp<<=1;
         }
-		w.mtable[i].norm();
+        normalise(w.mtable[i]);
     }
 	return (1<<WINDOW_SIZE);
 }
 
 int PFC::precomp_for_power(GT& w,BOOL small)
 {
-	ZZn6 v=w.g;
+	ZZn2 v=w.g;
 	int i,j,k,bp,is,t;
 	if (small) t=MR_ROUNDUP(2*S,WINDOW_SIZE);
 	else       t=MR_ROUNDUP(bits(*ord),WINDOW_SIZE);
-	w.etable=new ZZn6[1<<WINDOW_SIZE];
+	w.etable=new ZZn2[1<<WINDOW_SIZE];
 	w.etable[0]=1;
 	w.etable[1]=v;
 	w.etbits=t;
