@@ -1,4 +1,3 @@
-
 /***************************************************************************
                                                                            *
 Copyright 2013 CertiVox IOM Ltd.                                           *
@@ -191,8 +190,8 @@ public:
 #endif
 	}
 };
-//#ifndef MR_NO_RAND
-//extern ZZn4 randn4(void);   
-//#endif
+#ifndef MR_NO_RAND
+extern ZZn4 randn4(void);   
+#endif
 #endif
 
