@@ -1,5 +1,7 @@
 /*
- *
+
+This file has been modified by Raytheon BBN Technologies - January 2013.  
+
  * cp_pair.cpp
  *
  * Cocks-Pinch curve, Tate pairing embedding degree 2, ideal for security level AES-80
@@ -751,6 +753,53 @@ int GT::spill(char *& bytes)
 // restore precomputation for GT from byte array
 //
 
+/*
+ *  jkhoury@bbn.com
+ *  Serialization method for the points
+ *
+ */
+int GT::serialize(char *& bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y;
+
+	bytes=new char[len];
+
+	g.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+
+	return len;
+}
+/*
+ *  jkhoury@bbn.com
+ *  Deserialization method for the points
+ *  This will reset the element precomp
+ *
+ */
+void GT::deserialize(char *bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y;
+	if (etable!=NULL){
+		delete [] etable;
+		etable = NULL;
+	}
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	g.set(x,y);
+
+	delete [] bytes;
+}
+
 void GT::restore(char *bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
@@ -837,6 +886,53 @@ void G1::restore(char *bytes)
 }
 
 
+/*
+ *  jkhoury@bbn.com
+ *  Serialization method for the point x,y
+ *
+ */
+int G1::serialize(char *& bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y;
+
+	bytes=new char[len];
+
+	g.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+
+	return len;
+}
+/*
+ *  jkhoury@bbn.com
+ *  Deserialization method for the point x,y
+ *  This will reset the element to point x,y
+ *
+ */
+void G1::deserialize(char *bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y;
+	//reset precomp
+	if (mtable!=NULL){
+		delete [] mtable;
+		mtable=NULL;
+	}
+
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	g.set(x,y);
+
+	delete [] bytes;
+}
+
 G2 operator+(const G2& x,const G2& y)
 {
 	G2 z=x;
@@ -907,6 +1003,66 @@ void G2::restore(char *bytes)
 		mtable[i].set(x,y);
 
 	}
+	B=-B;
+	ecurve((Big)-3,B,get_modulus(),MR_PROJECTIVE);  // move back
+	delete [] bytes;
+}
+
+//
+// jkhoury@bbn.com
+// serialize element to byte array
+//
+
+int G2::serialize(char *& bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y;
+
+	bytes=new char[len];
+
+
+	g.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	//x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+
+	return len;
+}
+
+// jkhoury@bbn.com
+// restore element from byte array
+// reset the precomp
+//
+
+void G2::deserialize(char *bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y,B;
+	//reset precomp
+	if (mtable!=NULL){
+		delete [] mtable;
+		mtable=NULL;
+	}
+
+
+	B=getB();
+	B=-B;
+	ecurve((Big)-3,B,get_modulus(),MR_PROJECTIVE);  // move to twist
+
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+
+	g.set(x,y);
+
+
 	B=-B;
 	ecurve((Big)-3,B,get_modulus(),MR_PROJECTIVE);  // move back
 	delete [] bytes;
