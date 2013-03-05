@@ -1,7 +1,8 @@
 
 /***************************************************************************
-                                                                           *
-Copyright 2013 CertiVox IOM Ltd.                                           *
+This file has been modified by Raytheon BBN Technologies - January 2013.   *
+																		   *
+Copyright 2013 CertiVox IOM Ltd.                                           
                                                                            *
 This file is part of CertiVox MIRACL Crypto SDK.                           *
                                                                            *
@@ -1234,6 +1235,59 @@ int GT::spill(char *& bytes)
 	return len;
 }
 
+/*
+ *  jkhoury@bbn.com
+ *  Serialization method for the points
+ *
+ */
+int GT::serialize(char *& bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=12*bytes_per_big;
+	ZZn4 a,b,c;
+	ZZn2 f,s;
+	Big x,y;
+
+	bytes=new char[len];
+
+	g.get(a,b,c);
+	a.get(f,s);
+	f.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	s.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	b.get(f,s);
+	f.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	s.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	c.get(f,s);
+	f.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	s.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+
+	return len;
+}
+
 //
 // restore precomputation for GT from byte array
 //
@@ -1289,6 +1343,62 @@ void GT::restore(char *bytes)
 	delete [] bytes;
 }
 
+/*
+ *  jkhoury@bbn.com
+ *  Deserialization method for the points
+ *  This will reset the element precomp
+ *
+ */
+void GT::deserialize(char *bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=12*bytes_per_big;
+	ZZn4 a,b,c;
+	ZZn2 f,s;
+	Big x,y;
+	if (etable!=NULL){
+		delete [] etable;
+		etable = NULL;
+	}
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	f.set(x,y);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	s.set(x,y);
+	a.set(f,s);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	f.set(x,y);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	s.set(x,y);
+	b.set(f,s);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	f.set(x,y);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	s.set(x,y);
+	c.set(f,s);
+	g.set(a,b,c);
+
+	delete [] bytes;
+}
+
 //
 // spill precomputation on G1 to byte array
 //
@@ -1337,6 +1447,53 @@ void G1::restore(char *bytes)
 		j+=bytes_per_big;
 		mtable[i].set(x,y);
 	}
+	delete [] bytes;
+}
+
+/*
+ *  jkhoury@bbn.com
+ *  Serialization method for the point x,y
+ *
+ */
+int G1::serialize(char *& bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y;
+
+	bytes=new char[len];
+
+	g.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+
+	return len;
+}
+/*
+ *  jkhoury@bbn.com
+ *  Deserialization method for the point x,y
+ *  This will reset the element to point x,y
+ *
+ */
+void G1::deserialize(char *bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y;
+	//reset precomp
+	if (mtable!=NULL){
+		delete [] mtable;
+		mtable=NULL;
+	}
+
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	g.set(x,y);
+
 	delete [] bytes;
 }
 
@@ -1392,6 +1549,35 @@ int G2::spill(char *& bytes)
 // restore precomputation for G2 from byte array
 //
 
+/*
+ *  jkhoury@bbn.com
+ *  Serialization method for the 2 points
+ *
+ */
+int G2::serialize(char *& bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=4*bytes_per_big;
+	Big x,y;
+	ZZn2 a,b;
+
+	bytes=new char[len];
+
+	g.get(a,b);
+	a.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	b.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+
+	return len;
+}
+
 void G2::restore(char *bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
@@ -1416,6 +1602,39 @@ void G2::restore(char *bytes)
 		b.set(x,y);
 		mtable[i].set(a,b);
 	}
+	delete [] bytes;
+}
+
+/*
+ *  jkhoury@bbn.com
+ *  Deserialization method for the 2 points
+ *  This will reset the element precomp
+ *
+ */
+void G2::deserialize(char *bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=4*bytes_per_big;
+	ZZn2 a,b;
+	Big x,y;
+	//reset precomp
+	if (mtable!=NULL){
+		delete [] mtable;
+		mtable=NULL;
+	}
+
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	a.set(x,y);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	b.set(x,y);
+	g.set(a,b);
+
 	delete [] bytes;
 }
 
