@@ -1,4 +1,3 @@
-
 /***************************************************************************
                                                                            *
 Copyright 2013 CertiVox IOM Ltd.                                           *
@@ -131,6 +130,13 @@ public:
 	} 
 	int spill(char *&);
 	void restore(char *);
+	/*	 
+	 *  Added serialization methods for the element
+	 *  Spill/restore serialize the precomp only
+	 */
+	int serialize(char *&);
+	void deserialize(char *);
+	
 	friend G1 operator-(const G1&);
 	friend G1 operator+(const G1&,const G1&);
 	friend BOOL operator==(const G1& x,const G1& y)
@@ -164,6 +170,12 @@ public:
 	} 
 	int spill(char *&);
 	void restore(char *);
+	/*	 
+	 *  Added serialization methods for the element
+	 *  Spill/restore serialize the precomp only
+	 */
+	int serialize(char *&);
+	void deserialize(char *);
 
 	friend G2 operator-(const G2&);
 	friend G2 operator+(const G2&,const G2&);
@@ -196,6 +208,13 @@ public:
 	} 
 	int spill(char *&);
 	void restore(char *);
+	/*	 
+	 *  Added serialization methods for the element
+	 *  Spill/restore serialize the precomp only
+	 */
+	int serialize(char *&);
+	void deserialize(char *);
+	
 	friend GT operator*(const GT&,const GT&);
 	friend GT operator/(const GT&,const GT&);
 	friend BOOL operator==(const GT& x,const GT& y)
