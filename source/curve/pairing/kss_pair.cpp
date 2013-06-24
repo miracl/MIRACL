@@ -1,6 +1,7 @@
 
 /***************************************************************************
-                                                                           *
+This file has been modified by Raytheon BBN Technologies - January 2013.   *
+																		   *
 Copyright 2013 CertiVox IOM Ltd.                                           *
                                                                            *
 This file is part of CertiVox MIRACL Crypto SDK.                           *
@@ -1399,6 +1400,146 @@ int GT::spill(char *& bytes)
 // restore precomputation for GT from byte array
 //
 
+/*
+ *  jkhoury@bbn.com
+ *  Serialization method for the points
+ *
+ */
+int GT::serialize(char *& bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=18*bytes_per_big;
+	ZZn6 a,b,c;
+	ZZn3 f,s;
+	ZZn x,y,z;
+
+	bytes=new char[len];
+
+	g.get(a,b,c);
+	a.get(f,s);
+	f.get(x,y,z);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(z,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	s.get(x,y,z);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(z,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	b.get(f,s);
+	f.get(x,y,z);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(z,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+
+	s.get(x,y,z);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(z,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+
+	c.get(f,s);
+	f.get(x,y,z);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(z,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+
+	s.get(x,y,z);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(z,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+
+	return len;
+}
+/*
+ *  jkhoury@bbn.com
+ *  Deserialization method for the points
+ *  This will reset the element precomp
+ *
+ */
+void GT::deserialize(char *bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=18*bytes_per_big;
+	ZZn6 a,b,c;
+	ZZn3 f,s;
+	ZZn x,y,z;
+	if (etable!=NULL){
+		delete [] etable;
+		etable = NULL;
+	}
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	z=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	f.set(x,y,z);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	z=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	s.set(x,y,z);
+	a.set(f,s);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	z=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+
+	f.set(x,y,z);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	z=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+
+	s.set(x,y,z);
+	b.set(f,s);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	z=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+
+	f.set(x,y,z);
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	z=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+
+	s.set(x,y,z);
+	c.set(f,s);
+	g.set(a,b,c);
+
+	delete [] bytes;
+}
+
 void GT::restore(char *bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
@@ -1533,6 +1674,54 @@ void G1::restore(char *bytes)
 }
 
 
+/*
+ *  jkhoury@bbn.com
+ *  Serialization method for the point x,y
+ *
+ */
+int G1::serialize(char *& bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y;
+
+	bytes=new char[len];
+
+	g.get(x,y);
+	to_binary(x,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary(y,bytes_per_big,&bytes[j],TRUE);
+
+	return len;
+}
+/*
+ *  jkhoury@bbn.com
+ *  Deserialization method for the point x,y
+ *  This will reset the element to point x,y
+ *
+ */
+void G1::deserialize(char *bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=2*bytes_per_big;
+	Big x,y;
+	//reset precomp
+	if (mtable!=NULL){
+		delete [] mtable;
+		mtable=NULL;
+	}
+
+	x=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y=from_binary(bytes_per_big,&bytes[j]);
+	g.set(x,y);
+
+	delete [] bytes;
+}
+
+
 G2 operator+(const G2& x,const G2& y)
 {
 	G2 z=x;
@@ -1620,6 +1809,78 @@ void G2::restore(char *bytes)
 	delete [] bytes;
 }
 
+
+/*
+ *  jkhoury@bbn.com
+ *  Serialization method for the 2 points
+ *
+ */
+int G2::serialize(char *& bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=6*bytes_per_big;
+	ZZn3 x,y;
+	ZZn a,b,c;
+
+
+	bytes=new char[len];
+
+	g.get(x,y);
+	x.get(a,b,c);
+	to_binary((Big)a,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary((Big)b,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary((Big)c,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	y.get(a,b,c);
+	to_binary((Big)a,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary((Big)b,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+	to_binary((Big)c,bytes_per_big,&bytes[j],TRUE);
+	j+=bytes_per_big;
+
+	return len;
+}
+/*
+ *  jkhoury@bbn.com
+ *  Deserialization method for the 2 points
+ *  This will reset the element precomp
+ *
+ */
+void G2::deserialize(char *bytes)
+{
+	int j=0;
+	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
+	int len=6*bytes_per_big;
+	ZZn3 x,y;
+	ZZn a,b,c;
+	//reset precomp
+	if (mtable!=NULL){
+		delete [] mtable;
+		mtable=NULL;
+	}
+
+	a=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	b=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	c=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	x.set(a,b,c);
+	a=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	b=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	c=from_binary(bytes_per_big,&bytes[j]);
+	j+=bytes_per_big;
+	y.set(a,b,c);
+	g.set(x,y);
+
+	delete [] bytes;
+}
 
 // test if a ZZn18 element is of order q
 // can't think of a faster way to do this..
