@@ -48,6 +48,8 @@ cl /c /O2 /W3 /Tp mrzzn4.c
 cl /c /O2 /W3 /Tp mrshs.c
 cl /c /O2 /W3 /Tp mrshs256.c
 cl /c /O2 /W3 /Tp mrshs512.c
+cl /c /O2 /W3 /Tp mrsha3.c
+cl /c /O2 /W3 /Tp mrfpe.c
 cl /c /O2 /W3 /Tp mraes.c
 cl /c /O2 /W3 /Tp mrgcm.c
 cl /c /O2 /W3 /Tp mrstrong.c
@@ -86,7 +88,7 @@ lib /OUT:miracl.lib miracl.lib mrjack.obj mrxgcd.obj mrgcd.obj  mrarth3.obj mrar
 lib /OUT:miracl.lib miracl.lib mrmonty.obj mralloc.obj mrarth1.obj mrarth0.obj mrsmall.obj mrcore.obj mrmuldv.obj
 lib /OUT:miracl.lib miracl.lib mrcurve.obj mrshs.obj mraes.obj mrlucas.obj mrstrong.obj mrbrick.obj mrbits.obj 
 lib /OUT:miracl.lib miracl.lib mrshs256.obj mrshs512.obj mrebrick.obj mrgf2m.obj mrec2m.obj mrzzn2.obj mrzzn3.obj mrzzn4.obj
-lib /OUT:miracl.lib miracl.lib mrecn2.obj mrzzn2b.obj mrgcm.obj
+lib /OUT:miracl.lib miracl.lib mrecn2.obj mrzzn2b.obj mrgcm.obj mrfpe.obj mrsha3.obj
 lib /OUT:miracl.lib miracl.lib big.obj zzn.obj ecn.obj ec2.obj flash.obj
 
 del mr*.obj

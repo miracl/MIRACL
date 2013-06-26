@@ -75,7 +75,7 @@ int jack(_MIPD_ big a,big n)
             subdiv(_MIPP_ mr_mip->w1,2,mr_mip->w1);
             if (nm8==3 || nm8==5) t=-t; 
         }
-        if (compare(mr_mip->w1,mr_mip->w2)<0)
+        if (mr_compare(mr_mip->w1,mr_mip->w2)<0)
         {
             onm8=nm8;
             w=mr_mip->w1; mr_mip->w1=mr_mip->w2; mr_mip->w2=w;

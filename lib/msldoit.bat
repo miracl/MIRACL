@@ -39,6 +39,7 @@ cl /AL /O2 /c mrcurve.c
 cl /AL /O2 /c mrfast.c
 cl /AL /O2 /c mrshs.c
 cl /AL /O2 /c mrshs256.c
+cl /AL /O2 /c mrfpe.c
 cl /AL /O2 /c mraes.c
 cl /AL /O2 /c mrgcm.c
 cl /AL /O2 /c mrlucas.c
@@ -70,7 +71,7 @@ del miracl.lib
 lib miracl;
 lib miracl +mrflsh4+mrflsh3+mrflsh2+mrpi+mrflsh1;
 lib miracl +mrdouble+mrflash+mrfrnd+mrround+mrbuild;
-lib miracl +mrio2+mrio1+mrrand+mrprime+mrcrt+mrscrt+mrfast+mrgcm+mrzzn4;
+lib miracl +mrio2+mrio1+mrrand+mrprime+mrcrt+mrscrt+mrfast+mrgcm+mrzzn4+mrfpe;
 lib miracl +mrjack+mrxgcd+mrgcd+mrarth3+mrarth2+mrebrick+mrpower+mrsroot+mrbits;
 lib miracl +mrmonty+mralloc+mrarth1+mrarth0+mrsmall+mrcore+mrmuldv+mrzzn2+mrzzn3+mrecn2;
 lib miracl +mrcurve+mrshs+mrshs256+mraes+mrlucas+mrstrong+mrbrick+mrec2m+mrgf2m;

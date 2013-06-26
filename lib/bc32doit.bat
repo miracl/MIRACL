@@ -49,6 +49,8 @@ bcc32  -c -O2 -B mrfast.c
 bcc32  -c -O2 mrshs.c
 bcc32  -c -O2 mrshs256.c
 bcc32  -c -O2 mrshs512.c
+bcc32  -c -O2 mrsha3.c
+bcc32  -c -O2 mrfpe.c
 bcc32  -c -O2 mraes.c
 bcc32  -c -O2 mrgcm.c
 bcc32  -c -O2 mrstrong.c
@@ -86,7 +88,7 @@ tlib miracl +mrdouble+mrflash+mrfrnd+mrround+mrbuild
 tlib miracl +mrio2+mrio1+mrrand+mrprime+mrcrt+mrscrt+mrfast+mrbits
 tlib miracl +mrjack+mrxgcd+mrgcd+mrarth3+mrarth2+mrpower+mrsroot
 tlib miracl +mrmonty+mralloc+mrarth1+mrarth0+mrsmall+mrcore+mrmuldv
-tlib miracl +mrcurve+mrshs+mraes+mrlucas+mrstrong+mrbrick+mrshs256+mrgcm
+tlib miracl +mrcurve+mrshs+mraes+mrlucas+mrstrong+mrbrick+mrshs256+mrgcm+mrfpe+mrsha3
 tlib miracl +mrshs512+mrebrick+mrec2m+mrgf2m+mrzzn2+mrzzn3+mrecn2+mrzzn2b+mrzzn4
 rem tlib miracl +mrkcm
 del mr*.obj

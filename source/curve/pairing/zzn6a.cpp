@@ -489,6 +489,49 @@ ZZn6 powl(const ZZn6& x,const Big& k)
      return (w8/2);
 }
 
+// double exponention - see Schoenmaker's method from Stam's thesis
+
+ZZn6 powl(const ZZn6& x,const Big& n,const ZZn6& y,const Big& m,const ZZn6& a)
+{
+    ZZn6 A,B,C,T,two,vk,vl,va;
+    int j,nb;
+
+    two=(ZZn)2;
+    vk=x+x;
+    vl=y+y;
+    va=a+a;
+
+    nb=bits(n);
+    if (bits(m)>nb) nb=bits(m);
+
+    A=two; B=vk; C=vl;
+
+    for (j=nb;j>=1;j--)
+    {
+        if (bit(n,j-1)==0 && bit(m,j-1)==0)
+        {
+           B*=A; B-=vk; C*=A; C-=vl; A*=A; A-=two;
+        }
+        if (bit(n,j-1)==1 && bit(m,j-1)==0)
+        {
+            A*=B; A-=vk; C*=B; C-=va; B*=B; B-=two;
+        }
+        if (bit(n,j-1)==0 && bit(m,j-1)==1)
+        {
+            A*=C; A-=vl; B*=C; B-=va; C*=C; C-=two;
+        }
+        if (bit(n,j-1)==1 && bit(m,j-1)==1)
+        {
+            T=B*C-va; B*=A; B-=vk; C*=A; C-=vl; A=T;
+            T=A*vl-B; B=A*vk-C; C=T;
+        }
+    }
+
+    return (A/2);
+}
+
+
+
 #ifndef MR_NO_STANDARD_IO
 
 ostream& operator<<(ostream& s,const ZZn6& xx)

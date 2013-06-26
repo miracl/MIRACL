@@ -1,7 +1,9 @@
 ; MCS file for Gnu GCC 80386-Pentium compiler
 ;
+; *IMPORTANT*
 ; The optimizer may not like the generated code - if so switch it off
-; Or try -fomit-frame-pointer
+; Or try -fomit-frame-pointer. Or -fno-omit-frame-pointer
+; With gcc V4.7 [-O2 -fno-omit-frame-pointer] works OK
 ;
 ; Sorry about all the %'s! Each % must be input here as %%
 ; Triple register is cl|edi|ebp
@@ -43,7 +45,7 @@ MACRO PMUL_END
   "popl %%%%ebp\n"
    :
    :"m"(a),"m"(b),"m"(c),"m"(sn)
-   :"eax","edi","esi","ebx","ecx","edx","ebp","memory"
+   :"eax","edi","esi","ebx","ecx","edx","memory"
   );
 
 ENDM
@@ -105,7 +107,7 @@ MACRO MUL_END
   "popl %%%%ebp\n"
    :
    :"m"(a),"m"(b),"m"(c)
-   :"eax","edi","esi","ebx","ecx","edx","ebp","memory"
+   :"eax","edi","esi","ebx","ecx","edx","memory"
   );
 ENDM
 ;
@@ -167,7 +169,7 @@ MACRO SQR_END
   "popl %%%%ebp\n"
    :
    :"m"(a),"m"(c)
-   :"eax","edi","esi","ebx","ecx","edx","ebp","memory"
+   :"eax","edi","esi","ebx","ecx","edx","memory"
   );
 ENDM
 ;
@@ -228,7 +230,7 @@ MACRO REDC_END
   "popl %%%%ebp\n"
    :
    :"m"(a),"m"(b),"m"(ndash)
-   :"eax","edi","esi","ebx","ecx","edx","ebp","memory"
+   :"eax","edi","esi","ebx","ecx","edx","memory"
   );
 ENDM
 ;

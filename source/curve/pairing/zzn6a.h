@@ -152,6 +152,7 @@ public:
 	friend ZZn6 conj(const ZZn6&);
 //    friend ZZn6 pow(int,const ZZn6*,const Big*);
     friend ZZn6 powl(const ZZn6&,const Big&);
+	friend ZZn6 powl(const ZZn6&,const Big&,const ZZn6&,const Big&,const ZZn6&);
     friend ZZn6 inverse(const ZZn6&);
 
 #ifndef MR_NO_RAND

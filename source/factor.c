@@ -139,7 +139,7 @@ void brent(void)
             } while (k<r && size(z)==1);
             r*=2;
         } while (size(z)==1);
-        if (compare(z,n)==0) do 
+        if (mr_compare(z,n)==0) do 
         { /* back-track */
             mad(ys,ys,c3,n,n,ys);
             subtract(ys,x,z);
@@ -158,7 +158,7 @@ void brent(void)
             }
             else
             { /* if end of factorisation - pass it on... */
-                if (compare(z,n)==0) return;
+                if (mr_compare(z,n)==0) return;
               /* you will have to come back to it */
                 if (!suppress) printf("COMPOSITE FACTOR ");
                 else printf("& ");
@@ -316,7 +316,7 @@ void pollard(int lim1,long lim2)
                 }
                 else continue;
             }
-            if (compare(t,n)==0)
+            if (mr_compare(t,n)==0)
             {
                 if (!suppress) 
                 {
@@ -485,7 +485,7 @@ void williams(int lim1,long lim2,int ntrys)
                     }
                     else continue;
                 }
-                if (compare(t,n)==0)
+                if (mr_compare(t,n)==0)
                 {
                     if (!suppress) 
                     {
@@ -773,7 +773,7 @@ int lenstra(int lim1,long lim2,int nc,int kurve,int ncurves)
                     }
                     else continue;
                 }
-                if (compare(t,n)==0)
+                if (mr_compare(t,n)==0)
                 {
                     if (!suppress) 
                     {
@@ -1078,7 +1078,7 @@ BOOL gotcha(void)
     { /* check for false alarm */
         if (!suppress) printf("\ntrying...\n");
         add(XX,YY,TT);
-        if (compare(XX,YY)==0 || compare(TT,NN)==0) found=FALSE;
+        if (mr_compare(XX,YY)==0 || mr_compare(TT,NN)==0) found=FALSE;
         if (!found) if(!suppress) printf("working... %5d",jj);
     }
     return found;
@@ -1331,7 +1331,7 @@ int qsieve(int d)
                 if (size(PP)<0) add(PP,DD,PP);
                 mad(PP,PP,PP,DD,DD,VV);       /* VV = PP^2 mod kN  */
                 absol(TT,TT);
-                if (compare(TT,RR)<0) S=1;    /* check for -ve VV */
+                if (mr_compare(TT,RR)<0) S=1;    /* check for -ve VV */
                 if (S==1) subtract(DD,VV,VV);
                 copy(VV,TT);
                 e[0]=S;
@@ -1688,7 +1688,7 @@ int main(int argc,char **argv)
     mr_free(plus);
     mr_free(cp);
     mr_free(fu);
-    if (digits()<100)
+    if (digits()<110)
     {
         if (!suppress) printf("finally - the multiple polynomial quadratic sieve - with large prime (*)\n");
         qsieve(digits());

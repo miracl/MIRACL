@@ -1181,8 +1181,8 @@ int ecn2_mul2_jsf(_MIPD_ big a,ecn2 *P,big b,ecn2 *Q,ecn2 *R)
 
     mr_jsf(_MIPP_ d,c,e,d,f,c);   /* calculate joint sparse form */
  
-    if (compare(e,f)>0) bb=logb2(_MIPP_ e)-1;
-    else                bb=logb2(_MIPP_ f)-1;
+    if (mr_compare(e,f)>0) bb=logb2(_MIPP_ e)-1;
+    else                   bb=logb2(_MIPP_ f)-1;
 
     ecn2_add_sub(_MIPP_ &P1,&P2,&PS,&PD);
     ecn2_zero(R);
@@ -2553,7 +2553,7 @@ int ecn2_mul2_jsf(_MIPD_ big a,ecn2 *P,big b,ecn2 *Q,ecn2 *R)
 
     mr_jsf(_MIPP_ d,c,e,d,f,c);   /* calculate joint sparse form */
  
-    if (compare(e,f)>0) bb=logb2(_MIPP_ e)-1;
+    if (mr_compare(e,f)>0) bb=logb2(_MIPP_ e)-1;
     else                bb=logb2(_MIPP_ f)-1;
 
     /*ecn2_add_sub(_MIPP_ &P1,&P2,&PS,&PD);*/

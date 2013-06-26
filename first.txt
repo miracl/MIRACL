@@ -5,7 +5,7 @@ protocols. Many example programs are provide.
 
 To access the software, download the file miracl.zip.
 
-If using Windows decompress all files into a single DOS directory MIRACL
+If using Windows decompress all files into a single DOS directory MIRACL.
 
 To build the standard library in this directory using the Microsoft compiler, 
 first make sure that paths are set up correctly by running the Microsoft 
@@ -19,7 +19,7 @@ If using Linux, read the following carefully
 
 
 ------------------------------------------------
-RedHat Linux 6.0 MIRACL i386 installation
+Linux installation
 
 Download the MIRACL.ZIP file, and save it into an otherwise empty MIRACL directory.
 
@@ -31,8 +31,8 @@ The -j ignores the directory structure inside MIRACL.ZIP. The -aa converts all
 text files to Unix format, and -L ensures that all filenames are lower-case.
 
 
-2. Perform a tailored build of the MIRACL library by opening an X-Term, and 
-   typing
+2. Perform a tailored build of the MIRACL library by opening a terminal window, 
+   and typing
 
 bash linux
 
@@ -48,7 +48,7 @@ bash linux64
    may also require -lm in the compile command line.
 
 Make sure that your Linux PATH points to the current directory, so that 
-exectables can be run.
+executables can be run.
 
 Note that Linux already has (a rather pathetic) factor program. To avoid name 
 clashes you might rename MIRACL's "factor" program to "facter", or somesuch.
@@ -61,5 +61,5 @@ The manual is available in MS Word format as MANUAL.DOC
 
 The text file UPDATE.TXT describes the latest changes and additions
 
-Latest Version - V5.6.1   Last updated June 2012
+Latest Version - V7.0.0   Last updated June 2013
 

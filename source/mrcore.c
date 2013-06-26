@@ -1629,8 +1629,9 @@ void mr_xor(big x,big y,big z)
      nx=(x->len&(MR_OBITS));
      nz=(z->len&(MR_OBITS));
 #endif
-     if (ny<nx) nr=ny;
-     else       nr=nx;
+     if (ny<nx) nr=nx;
+     else       nr=ny;
+
      for (i=0;i<nr;i++)
          z->w[i]=x->w[i]^y->w[i];
      for (i=nr;i<nz;i++)

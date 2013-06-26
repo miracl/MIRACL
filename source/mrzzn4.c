@@ -260,6 +260,7 @@ void zzn4_lmul(_MIPD_ zzn4 *x,big y,zzn4 *w)
     MR_OUT
 }
 
+
 void zzn4_imul(_MIPD_ zzn4 *x,int y,zzn4 *w)
 {
 #ifdef MR_OS_THREADS
@@ -307,7 +308,7 @@ void zzn4_sqr(_MIPD_ zzn4 *x,zzn4 *w)
         zzn2_copy(&(w->b),&t2); // t2=b;
         zzn2_add(_MIPP_ &(w->a),&t2,&t1); // t1=a+b
 
-        zzn2_txx(_MIPP_ &t2);      // t2=txx(b);
+        zzn2_txx(_MIPP_ &t2);      
         zzn2_add(_MIPP_ &t2,&(w->a),&t2); // t2=a+txx(b)
 
         zzn2_mul(_MIPP_ &(w->b),&(w->a),&(w->b)); // b*=a
@@ -342,18 +343,18 @@ void zzn4_mul(_MIPD_ zzn4 *x,zzn4 *y,zzn4 *w)
     t3.b=mr_mip->w11;
     zzn2_copy(&(x->a),&t1);
     zzn2_copy(&(x->b),&t2);
-    zzn2_mul(_MIPP_ &t1,&(y->a),&t1);
-    zzn2_mul(_MIPP_ &t2,&(y->b),&t2);
+    zzn2_mul(_MIPP_ &t1,&(y->a),&t1);   /* t1= x->a * y->a */
+    zzn2_mul(_MIPP_ &t2,&(y->b),&t2);   /* t2 = x->b * y->b */
     zzn2_copy(&(y->a),&t3);
-    zzn2_add(_MIPP_ &t3,&(y->b),&t3);
+    zzn2_add(_MIPP_ &t3,&(y->b),&t3);   /* y->a + y->b */
 
-    zzn2_add(_MIPP_ &(x->b),&(x->a),&(w->b));
-    zzn2_mul(_MIPP_ &(w->b),&t3,&(w->b));
+    zzn2_add(_MIPP_ &(x->b),&(x->a),&(w->b)); /* x->a + x->b */
+    zzn2_mul(_MIPP_ &(w->b),&t3,&(w->b));     /* t3= (x->a + x->b)*(y->a + y->b) */
     zzn2_sub(_MIPP_ &(w->b),&t1,&(w->b));
-    zzn2_sub(_MIPP_ &(w->b),&t2,&(w->b));
+    zzn2_sub(_MIPP_ &(w->b),&t2,&(w->b));     /*  w->b = t3-(t1+t2) */
     zzn2_copy(&t1,&(w->a));
     zzn2_txx(_MIPP_ &t2);
-    zzn2_add(_MIPP_ &(w->a),&t2,&(w->a));
+    zzn2_add(_MIPP_ &(w->a),&t2,&(w->a));	/* w->a = t1+tx(t2) */
     if (x->unitary && y->unitary) w->unitary=TRUE;
     else w->unitary=FALSE;
 

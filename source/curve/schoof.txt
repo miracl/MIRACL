@@ -9,6 +9,10 @@ So for Borland C++ (although MS C++ is a fair bit quicker)
 bcc32 schoof.cpp poly.cpp polymod.cpp ecn.cpp big.cpp zzn.cpp crt.cpp
 miracl.lib
 
+For Microsoft C++
+
+cl /O2 /GX schoof.cpp poly.cpp polymod.cpp ecn.cpp big.cpp zzn.cpp crt.cpp miracl.lib
+
 On UNIX using g++, something like
 
 g++ -I. -c poly.cpp

@@ -35,15 +35,15 @@
 //#define MR_PAIRING_MNT	// AES-80 security
 //#define AES_SECURITY 80
 
-//#define MR_PAIRING_BN    // AES-128 or AES-192 security
-//#define AES_SECURITY 128
+#define MR_PAIRING_BN    // AES-128 or AES-192 security
+#define AES_SECURITY 128
 //#define AES_SECURITY 192
 
 //#define MR_PAIRING_KSS    // AES-192 security
 //#define AES_SECURITY 192
 
-#define MR_PAIRING_BLS    // AES-256 security
-#define AES_SECURITY 256
+//#define MR_PAIRING_BLS    // AES-256 security
+//#define AES_SECURITY 256
 //*********************************************
 
 #include "pairing_3.h"

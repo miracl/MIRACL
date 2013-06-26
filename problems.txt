@@ -56,24 +56,17 @@ MIRDEF.H file, or by inclusion of the wrong assembly language routines
 from mrmuldv.any. Be careful. Only use MIRDEF.H32 if you have both a true 32-
 bit CPU *AND* a true 32-bit compiler. 
 
-If for example you wish to use the pseudo-32-bit mode of operation on a 386 
-based PC you will have to (1) copy MIRDEF.HPC to MIRDEF.H (2) recompile 
-MIRACL.LIB using this new header, and (3) ensure that you are using the 
-appropriate versions of muldiv, muldvd, muldvd2 and muldvm from MRMULDV.ANY. 
-The Microsoft 80386 versions will also work with the Zortech, and Borland 
-compilers.  
-
-The "fast" code for modular exponentiation is NOT included in
+The "fast" code for modular arithmetic is NOT included in
 the precompiled libraries. To use this code the individual module e.g.
 mrkcm.c must be seperately created using the mex utility, compiled and linked
 in. Note also that only one of these methods can be used at a time. 
 Whenever possible use config.c to generate a valid MIRDEF.H
 
-The current GCC compiler does not seem to like the generated mrcomba.c and 
+Early versions of the GCC compiler did not seem to like the generated mrcomba.c and 
 mrkcm.c files. If it objects switch off optimization - the inline assembly is
 optimized enough. Or try -fomit-frame-pointer
 
-If using MIRACL on a DEC VAX or an IBM RS6000, which do not support a 
+If using MIRACL on a computer which does not support a 
 fullwidth number base, remember to (a) #define MR_NOFULLWIDTH in
 mirdef.h, and (b) use mirsys(...,MAXBASE) instead of mirsys(...,0) in all
 your programs. 

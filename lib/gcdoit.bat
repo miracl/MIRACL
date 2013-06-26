@@ -45,6 +45,8 @@ gcc -c -O2 mrfast.c
 gcc -c -O2 mrshs.c
 gcc -c -O2 mrshs256.c
 gcc -c -O2 mrshs512.c
+gcc -c -O2 mrsha3.c
+gcc -c -O2 mrfpe.c
 gcc -c -O2 mraes.c
 gcc -c -O2 mrgcm.c
 gcc -c -O2 mrlucas.c
@@ -72,7 +74,7 @@ as mrmuldv.gpp -o mrmuldv.o
 
 rem gcc -c -O2 -fomit-frame-pointer mrcomba.c
 
-ar rc miracl.a mrcore.o mrarth0.o mrarth1.o mrarth2.o mralloc.o mrsmall.o mrgcm.o
+ar rc miracl.a mrcore.o mrarth0.o mrarth1.o mrarth2.o mralloc.o mrsmall.o mrgcm.o mrfpe.o mrsha3.o
 ar r  miracl.a mrio1.o mrio2.o mrjack.o mrgcd.o mrxgcd.o mrarth3.o mrbits.o mrzzn2.o mrzzn3.o mrzzn4.o
 ar r  miracl.a mrrand.o mrprime.o mrcrt.o mrscrt.o mrmonty.o mrcurve.o mrpower.o mrsroot.o
 ar r  miracl.a mrfast.o mrshs.o mraes.o mrlucas.o mrstrong.o mrbrick.o mrecn2.o

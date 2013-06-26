@@ -57,7 +57,7 @@ BOOL zzn2_isunity(_MIPD_ zzn2 *x)
 #endif
     if (mr_mip->ERNUM || size(x->b)!=0) return FALSE;
 
-    if (compare(x->a,mr_mip->one)==0) return TRUE;
+    if (mr_compare(x->a,mr_mip->one)==0) return TRUE;
     return FALSE;
 
 }

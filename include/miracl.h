@@ -93,7 +93,7 @@ the CertiVox MIRACL Crypto SDK with a closed source product.               *
 
 /* To avoid name clashes - undefine this */
 
-#define compare mr_compare
+/* #define compare mr_compare */
 
 #ifdef MR_AVR
 #include <avr/pgmspace.h>
@@ -164,6 +164,7 @@ the CertiVox MIRACL Crypto SDK with a closed source product.               *
 #ifdef _WIN64
 #if MIRACL==64
 #define MR_WIN64
+#include <intrin.h>
 #endif
 #endif
 #endif
@@ -397,6 +398,12 @@ mr_unsign64 w[80];
 } sha512;
 
 typedef sha512 sha384;
+
+typedef struct {
+mr_unsign64 length;
+mr_unsign64 S[5][5];
+int rate,len;
+} sha3;
 
 #endif
 
@@ -1063,6 +1070,10 @@ extern void  shs384_init(sha384 *);
 extern void  shs384_process(sha384 *,int);
 extern void  shs384_hash(sha384 *,char *);
 
+extern void  sha3_init(sha3 *,int);
+extern void  sha3_process(sha3 *,int);
+extern void  sha3_hash(sha3 *,char *);
+
 #endif
 
 extern BOOL  aes_init(aes *,int,int,char *,char *);
@@ -1078,6 +1089,9 @@ extern void  gcm_init(gcm *,int,char *,int,char *);
 extern BOOL  gcm_add_header(gcm *,char *,int);
 extern BOOL  gcm_add_cipher(gcm *,int,char *,int,char *);
 extern void  gcm_finish(gcm *,char *);
+
+extern void FPE_encrypt(int ,aes *,mr_unsign32 ,mr_unsign32 ,char *,int);
+extern void FPE_decrypt(int ,aes *,mr_unsign32 ,mr_unsign32 ,char *,int);
 
 extern void  strong_init(csprng *,int,char *,mr_unsign32);   
 extern int   strong_rng(csprng *);

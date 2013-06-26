@@ -164,10 +164,7 @@ int main()
         cout << "n=" << n << endl;
         cout << "t=" << t << endl;
  
- 		if (x>0)
-			cout << "ham(6*x+2)= " << ham(6*x+2) << " (small is better for R-ate pairing)" << endl;
-		else
-			cout << "ham(6*x+2)= " << ham(-(6*x+2)) << " (small is better for R-ate pairing)" << endl;
+		cout << "ham(6*x+2)= " << ham(6*x+2) << " (small is better for R-ate pairing)" << endl;
 
         cout << "bits(t)= " << bits(t) << endl;
         cout << "ham(t-1) = " << ham(t-1) << " (small is better for Ate pairing)" << endl;
@@ -179,6 +176,10 @@ int main()
 		mip->IOBASE=16;
 		if (mip->TWIST==MR_SEXTIC_M) cout << "Twist type M" << endl;
 		if (mip->TWIST==MR_SEXTIC_D) cout << "Twist type D" << endl;
+
+		mip->IOBASE=10;
+		cout << "Hard part= " << (p*p*p*p-p*p+1)/n << endl;
+		mip->IOBASE=16;
 
         cout << "Point P= " << P << endl;
         cout << "Point Q= " << Q << endl;

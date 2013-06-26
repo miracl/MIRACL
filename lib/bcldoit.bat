@@ -44,6 +44,7 @@ bcc -ml -c -O mrzzn4.c
 bcc -ml -c -O mrecn2.c
 bcc -ml -c -O mrshs.c
 bcc -ml -c -O mrshs256.c
+bcc -ml -c -O mrfpe.c
 bcc -ml -c -O mraes.c
 bcc -ml -c -O mrgcm.c
 bcc -ml -c -O mrstrong.c
@@ -70,7 +71,7 @@ del miracl.lib
 tlib miracl
 tlib miracl +mrflsh4+mrflsh3+mrflsh2+mrpi+mrflsh1+mrfrnd+mrround+mrbuild
 tlib miracl +mrdouble+mrflash
-tlib miracl +mrio2+mrio1+mrrand+mrprime+mrcrt+mrscrt+mrfast+mrgcm
+tlib miracl +mrio2+mrio1+mrrand+mrprime+mrcrt+mrscrt+mrfast+mrgcm+mrfpe
 tlib miracl +mrjack+mrxgcd+mrgcd+mrarth3+mrarth2+mrpower+mrsroot+mrbits+mrecn2
 tlib miracl +mrmonty+mralloc+mrarth1+mrarth0+mrsmall+mrcore+mrmuldv+mrzzn2+mrzzn3+mrzzn4
 tlib miracl +mrcurve+mrshs+mrshs256+mraes+mrlucas+mrstrong+mrbrick+mrebrick+mrec2m+mrgf2m

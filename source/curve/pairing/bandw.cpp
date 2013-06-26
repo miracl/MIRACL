@@ -101,7 +101,7 @@ void output(ZZX& p)
     }
 }
 
-void outputfactors(ZZX &f)
+int outputfactors(ZZX &f)
 {
     int i;
     ZZ c;
@@ -113,6 +113,7 @@ void outputfactors(ZZX &f)
         cout << "("; output(factors[i].a); cout << ")";
         if (factors[i].b>1) cout << "^" << factors[i].b;
     }
+	return factors.length();
 }
 
 //
@@ -124,15 +125,16 @@ ZZX compose(ZZX &g,ZZX &b)
     ZZX c;
     int i,d=deg(g);
 
-    vec_ZZX table(INIT_SIZE,d+1);
-    table(0)=1;
-    for (i=1;i<=d;i++) table(i)=(table(i-1)*b);
+//    vec_ZZX table(INIT_SIZE,d+1);
+	ZZX table[100];
+    table[0]=1;
+    for (i=1;i<=d;i++) table[i]=(table[i-1]*b);
     clear(c);
 
     for (i=0;i<=d;i++)
     {
-        c+=g.rep[i]*table(i);
-        table(i).kill();
+        c+=g.rep[i]*table[i];
+ //       table(i).kill();
     }
 
     return c;
@@ -379,7 +381,16 @@ int main(int argc,char **argv)
             t *= phi(j);
       phi(i) = (ZZX(i, 1) - 1)/t;  // ZZX(i, a) == X^i * a
     }
+/*
+ZZX bnp=ZZX(4,36)+ZZX(3,36)+ZZX(2,24)+ZZX(1,6)+ZZX(0,1);
+ZZX bntm1=ZZX(2,6);
+ZZX bnq=bnp-bntm1;
 
+ZZX cof=(bnp*bnp*bnp*bnp-bnp*bnp+ZZX(0,1))/bnq;
+
+cout << "cof= ";outputfactors(cof); cout << endl;
+exit(0);
+*/
 	if (mode==0) 
 	{
         cout << "Finds best Brezing and Weng families of pairing friendly elliptic curves" << endl;
@@ -456,6 +467,9 @@ int main(int argc,char **argv)
 							    cout << "#define ORDER(x) ";output(r);cout << endl;
                                 cout << "#define WW " << ww << endl;
 							    cout << "rho= " << rho_n << "/" << rho_d << endl;
+								int fl;
+								cout << "factors= ";fl=outputfactors(compose(phi(K),p)/r);cout << endl;
+								cout << "Number of factors= " << fl << endl;
                             }
                                
                              w=g; 

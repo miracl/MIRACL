@@ -225,7 +225,6 @@ void cofactor(ECn2& S,ZZn2 &F,Big& x)
 	S.norm();
 }
 
-
 //
 // Add A=A+B  (or A=A+A) 
 // Return line function value
@@ -319,50 +318,47 @@ fpa=fpc=fpx=fpmq=fpsq=fpaq=0;
 
     r.mark_as_unitary();  // from now on all inverses are just conjugates !! (and squarings are faster)
 
+	res=r;
 // Newer new idea...
 // See "On the final exponentiation for calculating pairings on ordinary elliptic curves" 
 // Michael Scott and Naomi Benger and Manuel Charlemagne and Luis J. Dominguez Perez and Ezekiel J. Kachisa 
 
-    t1=pow(r,-x);  // x is sparse..
 
-    t0=r;    t0.powq(X);
+    t0=res;    t0.powq(X);
     x0=t0;   x0.powq(X);
 
-    x0*=(r*t0);
+    x0*=(res*t0);
     x0.powq(X);
 
-    x1=inverse(r);  // just a conjugation!
+    x1=inverse(res);  // just a conjugation!
 
-    x3=t1; x3.powq(X);
-    x4=t1;
+    x4=pow(res,-x);  // x is sparse..
+    x3=x4; x3.powq(X);
 
-    t1=pow(t1,-x);
+    x2=pow(x4,-x);
+    x5=inverse(x2);
+	t0=pow(x2,-x);
 
-    x2=t1; 
-	
 	x2.powq(X); 
     x4/=x2;
    
     x2.powq(X);
-
-    x5=inverse(t1);
-
-    t0=pow(t1,-x);
-    t1=t0; t1.powq(X); t0*=t1;
+   
+    res=t0; res.powq(X); t0*=res;
 
     t0*=t0;
     t0*=x4;
     t0*=x5;
-    t1=x3*x5;
-    t1*=t0;
+    res=x3*x5;
+    res*=t0;
     t0*=x2;
-    t1*=t1;
-    t1*=t0;
-    t1*=t1;
-    t0=t1*x1;
-    t1*=x0;
+    res*=res;
+    res*=t0;
+    res*=res;
+    t0=res*x1;
+    res*=x0;
     t0*=t0;
-    t0*=t1;
+    t0*=res;
 
 #ifdef MR_COUNT_OPS
 cout << "FE fpc= " << fpc << endl;

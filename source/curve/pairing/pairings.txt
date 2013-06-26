@@ -11,7 +11,7 @@ to test their protocol in a few lines of code, while exploiting
 all of the latest optimizations. The timings achieved are realistic
 and close to what can be expected from a real implementation.
 
-Sixteen example programs are supplied, which implement many of the schemes
+Fifteen example programs are supplied, which implement many of the schemes
 proposed in the P1363.3 standard. These are all written to use type-3 
 pairings
 
@@ -138,7 +138,7 @@ originally described, but many can work equally well on both.
 Some protocols like BLMQ signcryption work easily on a type-1 pairing, 
 but need to be changed significantly to work correctly on a type-3 pairing. 
 In some cases its quite hard to tell if a protocol will work on a type-3 
-pairing. Sometimes the security proof would have to be changed.
+pairing. Often the security proof would have to be changed.
 
 For more discussion, see http://eprint.iacr.org/2010/388 and the papers
 referenced there.

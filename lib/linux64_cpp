@@ -26,6 +26,8 @@ g++ -c -m64 -O2 mrfast.c
 g++ -c -m64 -O2 mrshs.c
 g++ -c -m64 -O2 mrshs256.c
 g++ -c -m64 -O2 mrshs512.c
+g++ -c -m64 -O2 mrsha3.c
+g++ -c -m64 -O2 mrfpe.c
 g++ -c -m64 -O2 mraes.c
 g++ -c -m64 -O2 mrgcm.c
 g++ -c -m64 -O2 mrlucas.c
@@ -62,7 +64,7 @@ ar r miracl.a mrrand.o mrprime.o mrcrt.o mrscrt.o mrmonty.o mrcurve.o mrsroot.o 
 ar r miracl.a mrpower.o mrfast.o mrshs.o mrshs256.o mraes.o mrlucas.o mrstrong.o mrgcm.o    
 ar r miracl.a mrflash.o mrfrnd.o mrdouble.o mrround.o mrbuild.o
 ar r miracl.a mrflsh1.o mrpi.o mrflsh2.o mrflsh3.o mrflsh4.o 
-ar r miracl.a mrbrick.o mrebrick.o mrec2m.o mrgf2m.o mrmuldv.o mrshs512.o
+ar r miracl.a mrbrick.o mrebrick.o mrec2m.o mrgf2m.o mrmuldv.o mrshs512.o  mrsha3.o mrfpe.o
 ar r miracl.a big.o zzn.o ecn.o ec2.o flash.o crt.o
 rm mr*.o
 g++ -m64 -O2 bmark.c miracl.a -o bmark
