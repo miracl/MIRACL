@@ -446,3 +446,8 @@ Version 7.0.0
 New support for Format Preserving Encryption. See fpe.pdf and new module mrfpe.c
 New support for SHA3 hash function (Keccak). See mrsha3.c
 New Macros for MIPS - see mips.mcs
+
+Version 7.0.1
+
+New advice om Texas DSP C6713 processor - see texasdsp.txt
+New Typical Thread-Safe No-Heap API example code for ECC - see testecc.c

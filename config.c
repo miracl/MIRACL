@@ -93,9 +93,9 @@ int main()
     printf("enter the native wordlength of your computer\n\n");
     printf("For your information:-\n");
     printf("The size of a char  is %d bits\n",bitsinchar);
-    printf("The size of a short is %ld bits\n",bitsinchar*sizeof(short));
-    printf("The size of an int  is %ld bits\n",bitsinchar*sizeof(int));
-    printf("The size of a long  is %ld bits\n",bitsinchar*sizeof(long));
+    printf("The size of a short is %d bits\n",bitsinchar*sizeof(short));
+    printf("The size of an int  is %d bits\n",bitsinchar*sizeof(int));
+    printf("The size of a long  is %d bits\n",bitsinchar*sizeof(long));
 
     eps=1.0;
     for (dmant=0;;dmant++)
@@ -106,7 +106,7 @@ int main()
         eps/=2.0;
     }
 
-    printf("The size of a double is %ld bits, its mantissa is %d bits\n",bitsinchar*sizeof(double),dmant);
+    printf("The size of a double is %d bits, its mantissa is %d bits\n",bitsinchar*sizeof(double),dmant);
 
     leps=1.0; 
     for (lmant=0;;lmant++) 
@@ -116,7 +116,7 @@ int main()
         if (lx==ly) break; 
         leps/=2.0; 
     } 
-    printf("The size of a long double is %ld bits, its mantissa is %d bits\n",bitsinchar*sizeof(long double),lmant);
+    printf("The size of a long double is %d bits, its mantissa is %d bits\n",bitsinchar*sizeof(long double),lmant);
 
 
     fp=fopen("mirdef.tst","wt");
@@ -147,7 +147,7 @@ int main()
     no64=0;
     if (double_type)
     {
-      fprintf(fp,"#define MIRACL %ld\n",bitsinchar*sizeof(double));
+      fprintf(fp,"#define MIRACL %d\n",bitsinchar*sizeof(double));
       fprintf(fp,"#define mr_utype double\n");
       fprintf(fp,"#define mr_dltype long double\n");
       fprintf(fp,"#define MR_NOFULLWIDTH\n");
@@ -235,8 +235,8 @@ int main()
       }
     }
 
-    fprintf(fp,"#define MR_IBITS %ld\n",bitsinchar*sizeof(int));
-    fprintf(fp,"#define MR_LBITS %ld\n",bitsinchar*sizeof(long)); 
+    fprintf(fp,"#define MR_IBITS %d\n",bitsinchar*sizeof(int));
+    fprintf(fp,"#define MR_LBITS %d\n",bitsinchar*sizeof(long)); 
 
 /* Now try to find 32-bit unsigned types */
 
@@ -488,6 +488,7 @@ int main()
     fprintf(fpl,"mrshs256.c\n");
     fprintf(fpl,"mraes.c\n");
 	fprintf(fpl,"mrgcm.c\n");
+	fprintf(fpl,"mrfpe.c\n");
     fprintf(fpl,"mrstrong.c\n");
     fprintf(fpl,"mrcurve.c\n");
     fprintf(fpl,"mrbrick.c\n");
@@ -502,8 +503,11 @@ int main()
         fprintf(fpl,"mrfast.c\n");
         fprintf(fpl,"mralloc.c\n");
     }
-    if (chosen64) fprintf(fpl,"mrshs512.c\n");
-
+    if (chosen64)
+	{
+		fprintf(fpl,"mrshs512.c\n");
+		fprintf(fpl,"mrsha3.c\n");
+	}
     port=0;
     if (chosen && double_length_type)
     {

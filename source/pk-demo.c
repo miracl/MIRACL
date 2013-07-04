@@ -41,9 +41,9 @@ int main()
     big_chinese ch;
     miracl *mip;
 #ifndef MR_NOFULLWIDTH   
-    mip=mirsys(50,0);
+    mip=mirsys(36,0);
 #else
-    mip=mirsys(50,MAXBASE);
+    mip=mirsys(36,MAXBASE);
 #endif
     a=mirvar(0);
     b=mirvar(0);

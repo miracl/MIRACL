@@ -596,7 +596,7 @@ void comba_redc(_MIPD_ big t,big z)
     }
     if (z->w[MR_COMBA-1]>=modulus->w[MR_COMBA-1])
     {
-        if (compare(z,modulus)>=0)
+        if (mr_compare(z,modulus)>=0)
         {
 /*** DECREMENT ***/
         }
@@ -957,7 +957,7 @@ comba_sub(z,w,z);
     }
     if (z->w[MR_COMBA-1]>=modulus->w[MR_COMBA-1])
     {
-        if (compare(z,modulus)>=0)
+        if (mr_compare(z,modulus)>=0)
         {
 /*** DECREMENT ***/
         }

@@ -1,0 +1,220 @@
+Using Code Composer Studio V5 and TI cycle-accurate Simulator to build MIRACL 
+for Texas C6713 processor
+
+A quick "getting started" project.
+
+Use this as mirdef.h
+
+#define MR_LITTLE_ENDIAN
+#define MIRACL 32
+#define mr_utype int
+#define MR_IBITS 32
+#define MR_LBITS 32
+#define mr_unsign32 unsigned int
+#define mr_unsign64 unsigned long long
+#define mr_dltype long long
+#define MR_NOASM
+#define MR_STRIPPED_DOWN
+#define MR_ALWAYS_BINARY
+#define MAXBASE ((mr_small)1<<(MIRACL-1))
+#define MR_BITSINCHAR 8
+#define MR_NOKOBLITZ
+#define MR_NO_SS
+
+
+Note that for the C6713 the long integer type is a non-standard 40-bits, so
+try to avoid it.
+
+Create a static library miracl.lib from these modules
+
+mirdef.h
+miracl.h
+
+mrcore.c
+mrarth0.c
+mrarth1.c
+mrarth2.c
+mrsmall.c
+mrio1.c
+mrio2.c
+mrgcd.c
+mrjack.c
+mrxgcd.c
+mrarth3.c
+mrbits.c
+mrrand.c
+mrprime.c
+mrcrt.c
+mrscrt.c
+mrmonty.c
+mrpower.c
+mrsroot.c
+mrlucas.c
+mrshs.c
+mrshs256.c
+mraes.c
+mrgcm.c
+mrfpe.c
+mrstrong.c
+mrcurve.c
+mrbrick.c
+mrebrick.c
+mrzzn2.c
+mrzzn2b.c
+mrzzn3.c
+mrecn2.c
+mrfast.c
+mralloc.c
+mrshs512.c
+mrsha3.c
+mrec2m.c
+mrgf2m.c
+
+Then build the pk-demo project from pk-demo.c, miracl.h, mirdef.h and miracl.lib
+
+Set the stack size to 0x2000 and the Heap size to 0x6000. Set optimization to -O2
+Turn on and enable the Clock under the Run menu to count clock cycles. 
+
+Build and run the project in the debugger.
+
+
+
+Now for a more ambitious project...
+
+Use this mirdef.h
+
+#define MR_LITTLE_ENDIAN
+#define MIRACL 32
+#define mr_utype int
+#define MR_IBITS 32
+#define MR_LBITS 32
+#define mr_unsign32 unsigned int
+#define mr_unsign64 unsigned long long
+#define mr_dltype long long
+#define MR_NOASM
+#define MR_STRIPPED_DOWN
+#define MR_ALWAYS_BINARY
+#define MAXBASE ((mr_small)1<<(MIRACL-1))
+#define MR_BITSINCHAR 8
+#define MR_NOKOBLITZ
+#define MR_NO_SS
+#define MR_STATIC 6
+#define MR_COMBA 6
+#define MR_GENERALIZED_MERSENNE
+#define MR_SPECIAL
+#define MR_SIMPLE_BASE
+#define MR_SIMPLE_IO
+#define MR_GENERIC_MT
+
+Then create mrcomba.c by executing (after compiling mex.c on any PC)
+
+mex -s 6 c mrcomba
+
+and create a static miracl.lib library from these components
+
+mirdef.h
+miracl.h
+
+mrcore.c
+mrarth0.c
+mrarth1.c
+mrarth2.c
+mrio1.c
+mrjack.c
+mrxgcd.c
+mrbits.c
+mrmonty.c
+mrsroot.c
+mrlucas.c
+mrcurve.c
+mrebrick.c
+mrcomba.c
+
+Finally build the ecdhp project from ecdhp.c, miracl.h, mirdef.h and miracl.lib
+
+Set the stack size to 0x1000 and the Heap size to 0x800 (apparently I/O uses the 
+heap - this MIRACL build does not - these numbers can be reduced experimentally). 
+Set optimization to -O2. Turn on and enable the Clock under the Run menu to count clock cycles. 
+
+Build and run the project in the debugger.
+
+The C6713 is a VLIW processor, so assembly language would be difficult, and is
+probably best avoided.
+Also it does not support unsigned 32-bit multiplication instruction, which is not
+ideal.
+
+
+One more - testecc.c - which exercises Elliptic Curve Diffie-Hellman, Digital Signature and
+Encryption using a typical MIRACL based API. MIRACL is basically hidden behind an API
+which simply throws around octet strings. Thread-Safe/No-Heap.
+
+Use this mirdef.h
+
+#define MR_LITTLE_ENDIAN
+#define MIRACL 32
+#define mr_utype int
+#define mr_dltype long long
+#define mr_unsign64 unsigned long long
+#define MR_IBITS 32
+#define MR_LBITS 32
+#define mr_unsign32 unsigned int
+#define MR_ALWAYS_BINARY
+#define MR_STATIC 8
+#define MR_GENERIC_MT
+#define MR_STRIPPED_DOWN
+#define MR_NOSUPPORT_COMPRESSION
+#define MR_SIMPLE_BASE
+#define MR_SIMPLE_IO
+#define MR_NOASM
+#define MAXBASE ((mr_small)1<<(MIRACL-1))
+#define MR_BITSINCHAR 8
+#define MR_NOKOBLITZ
+#define MR_NO_SS
+#define MR_COMBA 8
+#define MR_GENERALIZED_MERSENNE
+#define MR_SPECIAL
+
+and create mrcomba.c via
+
+mex -s 8 c mrcomba
+
+Build miracl.lib from
+
+mirdef.h
+miracl.h
+
+mrcore.c
+mrarth0.c
+mrarth1.c
+mrarth2.c
+mrio1.c
+mrgcd.c
+mrxgcd.c
+mrarth3.c
+mrbits.c
+mrmonty.c
+mrcurve.c
+mraes.c
+mrshs256.c
+mrstrong.c
+mrcomba.c
+
+Build the testecc project from testecc.c, miracl.h, mirdef.h, ecdh.h, ecdh.c, octet.c, octet.h and miracl.lib
+
+Now we run into a problem. The C compiler does not like to initialise an octet structure like this
+
+    char s0[32];
+    octet S0={0,sizeof(s0),s0};
+
+So this must be changed throughout to
+
+    char s0[32];
+    octet S0={0,sizeof(s0),NULL};
+    ..
+    S0.val=s0;
+
+Annoying!
+
+Set the stack size to 0x2000 and the Heap size to 0x800. 
+Set optimization to -O2. Turn on and enable the Clock under the Run menu to count clock cycles. 
+

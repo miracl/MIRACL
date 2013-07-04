@@ -15,6 +15,7 @@ The distribution media contains the following files
   FASTGF2M.TXT    -    How to speed up methods based on the field GF(2^m)
   WIN64.TXT       -    64-bit Windows advice
   DEVCPP.TXT      -    DEV-CPP quick-start instructions
+  TEXASDSP.TXT    -    Texas C6713 DSP advice
   AMD64.TXT       -    AMD64 processor advice
   SSE2.TXT        -    SSE2 extensions advice
   PIC32.TXT       -    PIC32 processor advice
@@ -242,6 +243,11 @@ In the subdirectory SOURCE
   P1363.C      - P1363 implementation file
   TEST1363.c   - test driver for P1363 implementation
   RSA.C        - quick start RSA application
+  OCTET.C      - OCTET string handler
+  OCTET.H      - OCTET header
+  ECDH.C       - Elliptic Curve Code
+  ECDH.H       - Elliptic Curve Header
+  TESTECC.C    - Typical MIRACL Elliptic Curve API Implementation - thread-safe - no heap
 
   In the subdirectory SOURCE\CURVE\PAIRING
 
