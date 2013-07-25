@@ -1,3 +1,37 @@
+/***************************************************************************
+                                                                           *
+Copyright 2013 CertiVox IOM Ltd.                                           *
+                                                                           *
+This file is part of CertiVox MIRACL Crypto SDK.                           *
+                                                                           *
+The CertiVox MIRACL Crypto SDK provides developers with an                 *
+extensive and efficient set of cryptographic functions.                    *
+For further information about its features and functionalities please      *
+refer to http://www.certivox.com                                           *
+                                                                           *
+* The CertiVox MIRACL Crypto SDK is free software: you can                 *
+  redistribute it and/or modify it under the terms of the                  *
+  GNU Affero General Public License as published by the                    *
+  Free Software Foundation, either version 3 of the License,               *
+  or (at your option) any later version.                                   *
+                                                                           *
+* The CertiVox MIRACL Crypto SDK is distributed in the hope                *
+  that it will be useful, but WITHOUT ANY WARRANTY; without even the       *
+  implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. *
+  See the GNU Affero General Public License for more details.              *
+                                                                           *
+* You should have received a copy of the GNU Affero General Public         *
+  License along with CertiVox MIRACL Crypto SDK.                           *
+  If not, see <http://www.gnu.org/licenses/>.                              *
+                                                                           *
+You can be released from the requirements of the license by purchasing     *
+a commercial license. Buying such a license is mandatory as soon as you    *
+develop commercial activities involving the CertiVox MIRACL Crypto SDK     *
+without disclosing the source code of your own applications, or shipping   *
+the CertiVox MIRACL Crypto SDK with a closed source product.               *
+                                                                           *
+***************************************************************************/
+
 /*
  * MIRACL-based implementation of the IEEE 1363 standard 
  * Version 1.6 July 2010
@@ -1709,7 +1743,7 @@ P1363_API int DL_DOMAIN_VALIDATE(BOOL (*idle)(void),dl_domain *DOM)
         OS2FEP(_MIPP_ &DOM->R,r);
         OS2FEP(_MIPP_ &DOM->G,g);
         if (size(g)<2 || size(q)<=2 || size(r)<=2) res=MR_P1363_DOMAIN_ERROR; 
-        if (compare(g,q)>=0) res=MR_P1363_DOMAIN_ERROR;
+        if (mr_compare(g,q)>=0) res=MR_P1363_DOMAIN_ERROR;
     }
     if (res==0)
     {
@@ -1847,7 +1881,7 @@ P1363_API int DL_PUBLIC_KEY_VALIDATE(BOOL (*idle)(void),dl_domain *DOM,BOOL full
         OS2FEP(_MIPP_ &DOM->Q,q);
         OS2FEP(_MIPP_ &DOM->R,r);
         OS2FEP(_MIPP_ W,w);
-        if (size(w)<2 || compare(w,q)>=0) res=MR_P1363_INVALID_PUBLIC_KEY;
+        if (size(w)<2 || mr_compare(w,q)>=0) res=MR_P1363_INVALID_PUBLIC_KEY;
     }
     if (res==0 && full) 
     {
@@ -2198,7 +2232,7 @@ P1363_API int DLVP_NR(BOOL (*idle)(void),dl_domain *DOM,octet *W,octet *C,octet 
         OS2FEP(_MIPP_ W,w);
         OS2FEP(_MIPP_ C,c);
         OS2FEP(_MIPP_ D,d);
-        if (size(c)<1 || compare(c,r)>=0 || size(d)<0 || compare(d,r)>=0) 
+        if (size(c)<1 || mr_compare(c,r)>=0 || size(d)<0 || mr_compare(d,r)>=0) 
             res=MR_P1363_INVALID;
     }
     if (res==0)
@@ -2263,7 +2297,7 @@ P1363_API int DLSP_NR(BOOL (*idle)(void),dl_domain *DOM,csprng *RNG,octet *S,oct
         OS2FEP(_MIPP_ &DOM->G,g);
         OS2FEP(_MIPP_ S,s);
         OS2FEP(_MIPP_ F,f);
-        if (compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
     if (res==0)
     {
@@ -2344,7 +2378,7 @@ P1363_API int DLVP_DSA(BOOL (*idle)(void),dl_domain *DOM,octet *W,octet *C,octet
         OS2FEP(_MIPP_ C,c);
         OS2FEP(_MIPP_ D,d);
         OS2FEP(_MIPP_ F,f);
-        if (size(c)<1 || size(d)<1 || compare(c,r)>=0 || compare(d,r)>=0) 
+        if (size(c)<1 || size(d)<1 || mr_compare(c,r)>=0 || mr_compare(d,r)>=0) 
             res=MR_P1363_INVALID;
     }
     if (res==0)
@@ -2354,7 +2388,7 @@ P1363_API int DLVP_DSA(BOOL (*idle)(void),dl_domain *DOM,octet *W,octet *C,octet
         mad(_MIPP_ c,d,c,r,r,h2);
         powmod2(_MIPP_ g,f,w,h2,q,d);
         divide(_MIPP_ d,r,r);
-        if (compare(d,c)!=0) res=MR_P1363_INVALID;
+        if (mr_compare(d,c)!=0) res=MR_P1363_INVALID;
     }
 #ifndef MR_STATIC
     memkill(_MIPP_ mem,8);
@@ -2544,9 +2578,9 @@ P1363_API int DLSP_NR2(BOOL (*idle)(void),dl_domain *DOM,octet *S,octet *U,octet
         OS2FEP(_MIPP_ F,f);
         OS2FEP(_MIPP_ U,u);
         OS2FEP(_MIPP_ V,v);
-        if (compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
-        if (size(u)<1 || compare(u,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
-        if (size(v)<1 || compare(v,q)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (size(u)<1 || mr_compare(u,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (size(v)<1 || mr_compare(v,q)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
 
     if (res==0)
@@ -2620,7 +2654,7 @@ P1363_API int DLVP_NR2(BOOL (*idle)(void),dl_domain *DOM,octet *W,octet *C,octet
         OS2FEP(_MIPP_ W,w);
         OS2FEP(_MIPP_ C,c);
         OS2FEP(_MIPP_ D,d);
-        if (size(c)<1 || compare(c,r)>=0 || compare(d,r)>=0) res=MR_P1363_INVALID;
+        if (size(c)<1 || mr_compare(c,r)>=0 || mr_compare(d,r)>=0) res=MR_P1363_INVALID;
     }
 
     if (res==0)
@@ -2684,7 +2718,7 @@ P1363_API int DLSP_PV(BOOL (*idle)(void),dl_domain *DOM,octet *S,octet *U,octet 
         OS2FEP(_MIPP_ S,s);
         OS2FEP(_MIPP_ U,u);
         OS2FEP(_MIPP_ H,h);
-        if (compare(u,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(u,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
 
     if (res==0)
@@ -2750,7 +2784,7 @@ P1363_API int DLVP_PV(BOOL (*idle)(void),dl_domain *DOM,octet *W,octet *H,octet 
         OS2FEP(_MIPP_ W,w);
         OS2FEP(_MIPP_ D,d);
         OS2FEP(_MIPP_ H,h);
-        if (compare(d,r)>=0) res=MR_P1363_INVALID;
+        if (mr_compare(d,r)>=0) res=MR_P1363_INVALID;
     }
 
     if (res==0)
@@ -2988,9 +3022,9 @@ P1363_API int ECP_DOMAIN_VALIDATE(BOOL (*idle)(void),ecp_domain *DOM)
         nroot(_MIPP_ q,2,t);
         premult(_MIPP_ t,4,t);
 
-        if (compare(r,t)<=0) res=MR_P1363_DOMAIN_ERROR;
-        if (compare(b,q)>=0) res=MR_P1363_DOMAIN_ERROR; 
-        if (compare(r,q)==0) res=MR_P1363_DOMAIN_ERROR;
+        if (mr_compare(r,t)<=0) res=MR_P1363_DOMAIN_ERROR;
+        if (mr_compare(b,q)>=0) res=MR_P1363_DOMAIN_ERROR; 
+        if (mr_compare(r,q)==0) res=MR_P1363_DOMAIN_ERROR;
         if (size(r)<3 || size(q)<3) res=MR_P1363_DOMAIN_ERROR;
     }
 
@@ -3207,7 +3241,7 @@ P1363_API int ECP_PUBLIC_KEY_VALIDATE(BOOL (*idle)(void),ecp_domain *DOM,BOOL fu
 
         compressed=OS2ECP(_MIPP_ W,wx,wy,DOM->fsize,&bit);
         if (W->len<DOM->fsize+1 || W->len>2*DOM->fsize+1) res=MR_P1363_INVALID_PUBLIC_KEY;
-        if (compare(wx,q)>=0 || compare (wy,q)>=0) res=MR_P1363_INVALID_PUBLIC_KEY; 
+        if (mr_compare(wx,q)>=0 || mr_compare (wy,q)>=0) res=MR_P1363_INVALID_PUBLIC_KEY; 
     }
     if (res==0)
     {
@@ -3720,7 +3754,7 @@ P1363_API int ECPSP_NR(BOOL (*idle)(void),ecp_domain *DOM,csprng *RNG,octet *S,o
         OS2FEP(_MIPP_ &DOM->A,a);
         OS2FEP(_MIPP_ S,s);
         OS2FEP(_MIPP_ F,f);
-        if (compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
     if (res==0)
     {
@@ -3824,7 +3858,7 @@ P1363_API int ECPVP_NR(BOOL (*idle)(void),ecp_domain *DOM,octet *W,octet *C,octe
         OS2FEP(_MIPP_ &DOM->B,b);
         OS2FEP(_MIPP_ C,c);
         OS2FEP(_MIPP_ D,d);
-        if (size(c)<1 || compare(c,r)>=0 || size(d)<0 || compare(d,r)>=0) 
+        if (size(c)<1 || mr_compare(c,r)>=0 || size(d)<0 || mr_compare(d,r)>=0) 
             res=MR_P1363_INVALID;
     }
 
@@ -3992,9 +4026,9 @@ P1363_API int ECPSP_NR2(BOOL (*idle)(void),ecp_domain *DOM,octet *S,octet *U,oct
         OS2FEP(_MIPP_ F,f);
         OS2FEP(_MIPP_ U,u);
         OS2FEP(_MIPP_ V,v);
-        if (size(u)<1 || compare(u,r)>=0)  res=MR_P1363_BAD_ASSUMPTION;
-        if (size(v)<1 || compare(v,q)>=0) res=MR_P1363_BAD_ASSUMPTION;  
-        if (compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION; 
+        if (size(u)<1 || mr_compare(u,r)>=0)  res=MR_P1363_BAD_ASSUMPTION;
+        if (size(v)<1 || mr_compare(v,q)>=0) res=MR_P1363_BAD_ASSUMPTION;  
+        if (mr_compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION; 
     }
     if (res==0)
     {
@@ -4079,7 +4113,7 @@ P1363_API int ECPVP_NR2(BOOL (*idle)(void),ecp_domain *DOM,octet *W,octet *C,oct
         OS2FEP(_MIPP_ &DOM->A,a);
         OS2FEP(_MIPP_ C,c);
         OS2FEP(_MIPP_ D,d);
-        if (size(c)<1 || compare(c,r)>=0 || compare(d,r)>=0) res=MR_P1363_INVALID;
+        if (size(c)<1 || mr_compare(c,r)>=0 || mr_compare(d,r)>=0) res=MR_P1363_INVALID;
     }
     if (res==0)
     {
@@ -4163,7 +4197,7 @@ P1363_API int ECPSP_PV(BOOL (*idle)(void),ecp_domain *DOM,octet *S,octet *U,octe
         OS2FEP(_MIPP_ S,s);
         OS2FEP(_MIPP_ U,u);
         OS2FEP(_MIPP_ H,h);
-        if (size(u)<1 || compare(u,r)>=0)  res=MR_P1363_BAD_ASSUMPTION;
+        if (size(u)<1 || mr_compare(u,r)>=0)  res=MR_P1363_BAD_ASSUMPTION;
     }
 
     if (res==0)
@@ -4241,7 +4275,7 @@ P1363_API int ECPVP_PV(BOOL (*idle)(void),ecp_domain *DOM,octet *W,octet *H,octe
         OS2FEP(_MIPP_ &DOM->A,a);
         OS2FEP(_MIPP_ H,h);
         OS2FEP(_MIPP_ D,d);
-        if (compare(d,r)>=0) res=MR_P1363_INVALID;
+        if (mr_compare(d,r)>=0) res=MR_P1363_INVALID;
     }
     if (res==0)
     {
@@ -4437,7 +4471,7 @@ P1363_API int ECPVP_DSA(BOOL (*idle)(void),ecp_domain *DOM,octet *W,octet *C,oct
         OS2FEP(_MIPP_ C,c);
         OS2FEP(_MIPP_ D,d);
         OS2FEP(_MIPP_ F,f);
-        if (size(c)<1 || compare(c,r)>=0 || size(d)<1 || compare(d,r)>=0) 
+        if (size(c)<1 || mr_compare(c,r)>=0 || size(d)<1 || mr_compare(d,r)>=0) 
             res=MR_P1363_INVALID;
     }
 
@@ -4466,7 +4500,7 @@ P1363_API int ECPVP_DSA(BOOL (*idle)(void),ecp_domain *DOM,octet *W,octet *C,oct
             {
                 epoint_get(_MIPP_ P,d,d);
                 divide(_MIPP_ d,r,r);
-                if (compare(d,c)!=0) res=MR_P1363_INVALID;
+                if (mr_compare(d,c)!=0) res=MR_P1363_INVALID;
             }
         }
     }
@@ -4706,7 +4740,7 @@ P1363_API int EC2_DOMAIN_VALIDATE(BOOL (*idle)(void),ec2_domain *DOM)
         nroot(_MIPP_ q,2,t);
         premult(_MIPP_ t,4,t);
 
-        if (compare(r,t)<=0) res=MR_P1363_DOMAIN_ERROR;
+        if (mr_compare(r,t)<=0) res=MR_P1363_DOMAIN_ERROR;
         if (size(r)<3 || size(b)==0) res=MR_P1363_DOMAIN_ERROR;
     }
 
@@ -5420,7 +5454,7 @@ P1363_API int EC2SP_NR(BOOL (*idle)(void),ec2_domain *DOM,csprng *RNG,octet *S,o
         OS2FEP(_MIPP_ &DOM->A,a);
         OS2FEP(_MIPP_ S,s);
         OS2FEP(_MIPP_ F,f);
-        if (compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
     if (res==0)
     {
@@ -5521,7 +5555,7 @@ P1363_API int EC2VP_NR(BOOL (*idle)(void),ec2_domain *DOM,octet *W,octet *C,octe
         OS2FEP(_MIPP_ &DOM->A,a);
         OS2FEP(_MIPP_ C,c);
         OS2FEP(_MIPP_ D,d);
-        if (size(c)<1 || compare(c,r)>=0 || size(d)<0 || compare(d,r)>=0) 
+        if (size(c)<1 || mr_compare(c,r)>=0 || size(d)<0 || mr_compare(d,r)>=0) 
             res=MR_P1363_INVALID;
     }
 
@@ -5722,7 +5756,7 @@ P1363_API int EC2VP_DSA(BOOL (*idle)(void),ec2_domain *DOM,octet *W,octet *C,oct
         OS2FEP(_MIPP_ C,c);
         OS2FEP(_MIPP_ D,d);
         OS2FEP(_MIPP_ F,f);
-        if (size(c)<1 || compare(c,r)>=0 || size(d)<1 || compare(d,r)>=0) 
+        if (size(c)<1 || mr_compare(c,r)>=0 || size(d)<1 || mr_compare(d,r)>=0) 
             res=MR_P1363_INVALID;
     }
 
@@ -5751,7 +5785,7 @@ P1363_API int EC2VP_DSA(BOOL (*idle)(void),ec2_domain *DOM,octet *W,octet *C,oct
             {
                 epoint2_get(_MIPP_ P,d,d);
                 divide(_MIPP_ d,r,r);
-                if (compare(d,c)!=0) res=MR_P1363_INVALID;
+                if (mr_compare(d,c)!=0) res=MR_P1363_INVALID;
             }
         }
     }
@@ -5888,9 +5922,9 @@ P1363_API int EC2SP_NR2(BOOL (*idle)(void),ec2_domain *DOM,octet *S,octet *U,oct
         OS2FEP(_MIPP_ F,f);
         OS2FEP(_MIPP_ U,u);
         OS2FEP(_MIPP_ V,v);
-        if (size(u)<1 || compare(u,r)>=0)  res=MR_P1363_BAD_ASSUMPTION;
+        if (size(u)<1 || mr_compare(u,r)>=0)  res=MR_P1363_BAD_ASSUMPTION;
         if (size(v)<1) res=MR_P1363_BAD_ASSUMPTION;  
-        if (compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION; 
+        if (mr_compare(f,r)>=0) res=MR_P1363_BAD_ASSUMPTION; 
     }
     if (res==0)
     {
@@ -5975,7 +6009,7 @@ P1363_API int EC2VP_NR2(BOOL (*idle)(void),ec2_domain *DOM,octet *W,octet *C,oct
         OS2FEP(_MIPP_ &DOM->A,a);
         OS2FEP(_MIPP_ C,c);
         OS2FEP(_MIPP_ D,d);
-        if (size(c)<1 || compare(c,r)>=0 || compare(d,r)>=0) res=MR_P1363_INVALID;
+        if (size(c)<1 || mr_compare(c,r)>=0 || mr_compare(d,r)>=0) res=MR_P1363_INVALID;
     }
     if (res==0)
     {
@@ -6056,7 +6090,7 @@ P1363_API int EC2SP_PV(BOOL (*idle)(void),ec2_domain *DOM,octet *S,octet *U,octe
         OS2FEP(_MIPP_ S,s);
         OS2FEP(_MIPP_ U,u);
         OS2FEP(_MIPP_ H,h);
-        if (size(u)<1 || compare(u,r)>=0)  res=MR_P1363_BAD_ASSUMPTION;
+        if (size(u)<1 || mr_compare(u,r)>=0)  res=MR_P1363_BAD_ASSUMPTION;
     }
 
     if (res==0)
@@ -6134,7 +6168,7 @@ P1363_API int EC2VP_PV(BOOL (*idle)(void),ec2_domain *DOM,octet *W,octet *H,octe
         OS2FEP(_MIPP_ &DOM->A,a);
         OS2FEP(_MIPP_ H,h);
         OS2FEP(_MIPP_ D,d);
-        if (compare(d,r)>=0) res=MR_P1363_INVALID;
+        if (mr_compare(d,r)>=0) res=MR_P1363_INVALID;
     }
     if (res==0)
     {
@@ -6303,7 +6337,7 @@ P1363_API int IF_KEY_PAIR(BOOL (*idle)(void),csprng *RNG,int bits,int E,if_priva
             {
                 if (mr_mip->ERNUM) break;
                 strong_bigrand(_MIPP_ RNG,t,q);
-            } while (compare(q,c)<0);
+            } while (mr_compare(q,c)<0);
             if (remain(_MIPP_ q,2)==0) incr(_MIPP_ q,1,q);
 
             if (RW) 
@@ -6426,7 +6460,7 @@ P1363_API int IFEP_RSA(BOOL (*idle)(void),if_public_key *PUB,octet *F,octet *G)
 
         OS2FEP(_MIPP_ &PUB->N,n);
         OS2FEP(_MIPP_ F,f);
-        if (compare(f,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(f,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
     if (res==0)
     {    
@@ -6488,7 +6522,7 @@ P1363_API int IFDP_RSA(BOOL (*idle)(void),if_private_key *PRIV,octet *G,octet *F
         OS2FEP(_MIPP_ &PRIV->C,c);
         OS2FEP(_MIPP_ G,g);
         multiply(_MIPP_ p,q,n);
-        if (compare(g,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(g,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
     if (res==0)
     {    
@@ -6549,7 +6583,7 @@ P1363_API int IFSP_RSA1(BOOL (*idle)(void),if_private_key *PRIV,octet *F,octet *
         OS2FEP(_MIPP_ &PRIV->C,c);
         OS2FEP(_MIPP_ F,f);
         multiply(_MIPP_ p,q,n);
-        if (compare(f,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(f,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
     if (res==0)
     {    
@@ -6600,7 +6634,7 @@ P1363_API int IFVP_RSA1(BOOL (*idle)(void),if_public_key *PUB,octet *S,octet *F)
 
         OS2FEP(_MIPP_ &PUB->N,n);
         OS2FEP(_MIPP_ S,s);
-        if (compare(s,n)>=0) res=MR_P1363_INVALID;
+        if (mr_compare(s,n)>=0) res=MR_P1363_INVALID;
     }
     if (res==0)
     {        
@@ -6664,13 +6698,13 @@ P1363_API int IFSP_RSA2(BOOL (*idle)(void),if_private_key *PRIV,octet *F,octet *
         OS2FEP(_MIPP_ F,f);
         multiply(_MIPP_ p,q,n);
         if (remain(_MIPP_ f,16)!=12) res=MR_P1363_BAD_ASSUMPTION;
-        if (compare(f,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(f,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
     if (res==0)
     {
         private_key_op(_MIPP_ p,q,dp,dq,c,f,s);
         subtract(_MIPP_ n,s,t);
-        if (compare(s,t)>0)
+        if (mr_compare(s,t)>0)
             convert_big_octet(_MIPP_ t,S);
         else
             convert_big_octet(_MIPP_ s,S);
@@ -6721,7 +6755,7 @@ P1363_API int IFVP_RSA2(BOOL (*idle)(void),if_public_key *PUB,octet *S,octet *F)
         OS2FEP(_MIPP_ S,s);
         decr(_MIPP_ n,1,f);
         subdiv(_MIPP_ f,2,f);
-        if (compare(s,f)>0) res=MR_P1363_INVALID;
+        if (mr_compare(s,f)>0) res=MR_P1363_INVALID;
     }
     if (res==0)
     {        
@@ -6794,7 +6828,7 @@ P1363_API int IFSP_RW(BOOL (*idle)(void),if_private_key *PRIV,octet *F,octet *S)
         OS2FEP(_MIPP_ F,f);
         multiply(_MIPP_ p,q,n);
         if (remain(_MIPP_ f,16)!=12) res=MR_P1363_BAD_ASSUMPTION;
-        if (compare(f,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
+        if (mr_compare(f,n)>=0) res=MR_P1363_BAD_ASSUMPTION;
     }
     if (res==0)
     {
@@ -6802,7 +6836,7 @@ P1363_API int IFSP_RW(BOOL (*idle)(void),if_private_key *PRIV,octet *F,octet *S)
             subdiv(_MIPP_ f,2,f);
         private_key_op(_MIPP_ p,q,dp,dq,c,f,s);
         subtract(_MIPP_ n,s,t);
-        if (compare(s,t)>0)
+        if (mr_compare(s,t)>0)
             convert_big_octet(_MIPP_ t,S);
         else
             convert_big_octet(_MIPP_ s,S);
@@ -6856,7 +6890,7 @@ P1363_API int IFVP_RW(BOOL (*idle)(void),if_public_key *PUB,octet *S,octet *F)
         OS2FEP(_MIPP_ S,s);
         decr(_MIPP_ n,1,f);
         subdiv(_MIPP_ f,2,f);
-        if (compare(s,f)>0) res=MR_P1363_INVALID;
+        if (mr_compare(s,f)>0) res=MR_P1363_INVALID;
     }
     if (res==0)
     {        

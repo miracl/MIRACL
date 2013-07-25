@@ -1,21 +1,21 @@
 /***************************************************************************
                                                                            *
-Copyright 2013 CertiVox UK Ltd.                                            *
+Copyright 2013 CertiVox IOM Ltd.                                           *
                                                                            *
-This file is part of CertiVox SkyKey XT Crypto SDK.                        *
+This file is part of CertiVox MIRACL Crypto SDK.                           *
                                                                            *
-The CertiVox SkyKey XT Crypto SDK provides developers with an              *
+The CertiVox MIRACL Crypto SDK provides developers with an                 *
 extensive and efficient set of cryptographic functions.                    *
 For further information about its features and functionalities please      *
 refer to http://www.certivox.com                                           *
                                                                            *
-* The CertiVox SkyKey XT Crypto SDK is free software: you can              *
+* The CertiVox MIRACL Crypto SDK is free software: you can                 *
   redistribute it and/or modify it under the terms of the                  *
   GNU Affero General Public License as published by the                    *
   Free Software Foundation, either version 3 of the License,               *
   or (at your option) any later version.                                   *
                                                                            *
-* The CertiVox SkyKey XT Crypto SDK is distributed in the hope             *
+* The CertiVox MIRACL Crypto SDK is distributed in the hope                *
   that it will be useful, but WITHOUT ANY WARRANTY; without even the       *
   implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. *
   See the GNU Affero General Public License for more details.              *
@@ -26,11 +26,11 @@ refer to http://www.certivox.com                                           *
                                                                            *
 You can be released from the requirements of the license by purchasing     *
 a commercial license. Buying such a license is mandatory as soon as you    *
-develop commercial activities involving the CertiVox SkyKey XT Crypto SDK  *
+develop commercial activities involving the CertiVox MIRACL Crypto SDK     *
 without disclosing the source code of your own applications, or shipping   *
-the CertiVox SkyKey XT Crypto SDK with a closed source product.            *
+the CertiVox MIRACL Crypto SDK with a closed source product.               *
                                                                            *
-***************************************************************************/ 
+***************************************************************************/
 
 /*
  *  MIRACL ECDH header file
