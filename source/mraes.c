@@ -2,7 +2,7 @@
 
 /***************************************************************************
                                                                            *
-Copyright 2013 CertiVox IOM Ltd.                                           *
+Copyright 2013 CertiVox UK Ltd.                                           *
                                                                            *
 This file is part of CertiVox MIRACL Crypto SDK.                           *
                                                                            *
