@@ -13,8 +13,9 @@ While many other cryptographic SDKs are focused on PC use, MIRACL also enables d
 <li>Greatly simplified program development</li>
 <li>Developer-designed APIs</li>
 <li>Rapid implementation, using inline code wrappers, example programs and other innovations</li>
-<li>These unique qualities are the reason MIRACL, and the solutions and services built using it, are in use in hundreds of organizations across the world, including BAE Systems, Hitachi, Intel, Panasonic, Toyota and many others.</li>
 </ul>
+
+These unique qualities are the reason MIRACL, and the solutions and services built using it, are in use in hundreds of organizations across the world, including BAE Systems, Hitachi, Intel, Panasonic, Toyota and many others.
 
 <h2>Features and Benefits: why MIRACL is the right choice</h2>
 MIRACL delivers a wide and unique range of benefits, enabling developers to secure even the most constrained environments quickly, easily and effectively. It features, amongst others:
