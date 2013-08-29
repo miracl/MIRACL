@@ -119,9 +119,9 @@ int main()
         forever
         { 
             bigrand(high,p1);
-            if (compare(p1,low)<0) continue;
+            if (mr_compare(p1,low)<0) continue;
             nxprime(p1,p1);
-            if (compare(p1,high)>0) continue;
+            if (mr_compare(p1,high)>0) continue;
             copy(p1,pool[i]);  
             break;
         }

@@ -61,7 +61,7 @@ int main()
             add(L,T,L);
             sftbit(T,q,T);
             subtract(L,T,L);
-            if (compare(L,m)>=0) subtract(L,m,L);
+            if (mr_compare(L,m)>=0) subtract(L,m,L);
         }
         if (size(L)==0)
         { /* mersenne prime found! */

@@ -75,7 +75,7 @@ int main()
             i=subdiv(x,m,t);
             mad(x,table[i],x,n,n,x);
             dm+=distance[i];
-            if (compare(x,trap)==0 || dm>LIMIT+dn) break;
+            if (mr_compare(x,trap)==0 || dm>LIMIT+dn) break;
         }
         if (dm>LIMIT+dn)
         { /* trap stepped over */

@@ -103,7 +103,7 @@ int main()
     innum(r,fp);
     innum(s,fp);
     fclose(fp);
-    if (compare(r,q)>=0 || compare(s,q)>=0)
+    if (mr_compare(r,q)>=0 || mr_compare(s,q)>=0)
     {
         printf("Signature is NOT verified\n");
         return 0;
@@ -113,7 +113,7 @@ int main()
     mad(r,s,s,q,q,u2);
     powmod2(g,u1,y,u2,p,v);
     divide(v,q,q);
-    if (compare(v,r)==0) printf("Signature is verified\n");
+    if (mr_compare(v,r)==0) printf("Signature is verified\n");
     else                 printf("Signature is NOT verified\n");
     return 0;
 }

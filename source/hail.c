@@ -21,7 +21,7 @@ int main ()
     innum(x,stdin);
     do
     { /* main loop */
-        if (compare(x,mx)>0) copy(x,mx);
+        if (mr_compare(x,mx)>0) copy(x,mx);
         r=subdiv(x,2,y);
         if (r!=0)
         { /* what goes up ... */

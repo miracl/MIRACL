@@ -58,7 +58,7 @@ int main()
     forever 
     {
         bigrand(t,p);
-        if (compare(p,s)<=0) continue;
+        if (mr_compare(p,s)<=0) continue;
         premult(p,2,p);
         multiply(p,q,p);
         incr(p,1,p);

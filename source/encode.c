@@ -115,7 +115,7 @@ int main()
         { /* now deal with left overs */
             mip->IOBASE=128;
             cinstr(m,line);
-            if (compare(m,mn)<0)
+            if (mr_compare(m,mn)<0)
             { /* pad out with random number if necessary */
                 bigrand(mn,y);
                 multiply(mn,mn,e);

@@ -276,7 +276,7 @@ int main()
                     if (p>LIMIT2) break;
                     else continue;
                 }
-                if (compare(t,n)==0)
+                if (mr_compare(t,n)==0)
                 {
                     printf("\ndegenerate case");
                     break;

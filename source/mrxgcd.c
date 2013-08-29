@@ -380,7 +380,7 @@ int invmodp(_MIPD_ big a,big p,big z)
             if (remain(_MIPP_ x2,2)!=0) add(_MIPP_ x2,p,x2);
             subdiv(_MIPP_ x2,2,x2);
         }
-        if (compare(u,v)>=0)
+        if (mr_compare(u,v)>=0)
         {
             mr_psub(_MIPP_ u,v,u);
             subtract(_MIPP_ x1,x2,x1);

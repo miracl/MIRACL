@@ -137,7 +137,7 @@ int main()
     innum(r,fp);
     innum(s,fp);
     fclose(fp);
-    if (compare(r,q)>=0 || compare(s,q)>=0)
+    if (mr_compare(r,q)>=0 || mr_compare(s,q)>=0)
     {
         printf("Signature is NOT verified\n");
         return 0;
@@ -154,7 +154,7 @@ printf("Number of modmuls= %d, inverses= %d\n",fpm2,fpi2);
 #endif
     epoint2_get(g,v,v);
     divide(v,q,q);
-    if (compare(v,r)==0) printf("Signature is verified\n");
+    if (mr_compare(v,r)==0) printf("Signature is verified\n");
     else                 printf("Signature is NOT verified\n");
     return 0;
 }

@@ -238,7 +238,7 @@ fpc+=125;
 
 	modsqr(w->w,mr_mip->w2->w);
 	mr_mip->w2->len=2;
-	if (compare(mr_mip->w1,mr_mip->w2)!=0) {zero(w);return FALSE;}
+	if (mr_compare(mr_mip->w1,mr_mip->w2)!=0) {zero(w);return FALSE;}
 
 	
 	return TRUE;
@@ -1348,7 +1348,7 @@ int ecn2_mul2_jsf(_MIPD_ big a,ecn2 *P,big b,ecn2 *Q,ecn2 *R)
 
     mr_jsf(_MIPP_ d,c,e,d,f,c);   /* calculate joint sparse form */
  
-    if (compare(e,f)>0) bb=logb2(_MIPP_ e)-1;
+    if (mr_compare(e,f)>0) bb=logb2(_MIPP_ e)-1;
     else                bb=logb2(_MIPP_ f)-1;
 
     ecn2_add_sub(_MIPP_ &P1,&P2,&PS,&PD);

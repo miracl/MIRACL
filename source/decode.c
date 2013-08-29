@@ -106,7 +106,7 @@ int main()
         for (i=0;i<NP;i++)
             powmod(m,kp[i],p[i],ep[i]);
         crt(&ch,ep,e);    /* Chinese remainder thereom */
-        if (compare(e,mx)>=0) divide(e,mn,mn);
+        if (mr_compare(e,mx)>=0) divide(e,mn,mn);
         mip->IOBASE=128;
         if (flo) cotnum(e,ofile);
         cotnum(e,stdout);

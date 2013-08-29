@@ -69,7 +69,7 @@ int main()
             } while (k<r && size(z)==1);
             r*=2;
         } while (size(z)==1);
-        if (compare(z,n)==0) do 
+        if (mr_compare(z,n)==0) do 
         { /* back-track */
             mad(mip,ys,ys,c3,n,n,ys);
             subtract(mip,ys,x,z);
@@ -78,7 +78,7 @@ int main()
              printf("\ncomposite factor ");
         else printf("\nprime factor     ");
         cotnum(mip,z,stdout);
-        if (compare(z,n)==0) return 0;
+        if (mr_compare(z,n)==0) return 0;
         divide(mip,n,z,n);
         divide(mip,y,n,n);
     } while (!isprime(mip,n));

@@ -23,26 +23,26 @@ static int np;
 
 void iterate(big x,big q,big r,big a,big b)
 { /* apply Pollards random mapping */
-    if (compare(x,lim1)<0)
+    if (mr_compare(x,lim1)<0)
     {
         mad(x,q,q,p,p,x);
         incr(a,1,a);
-        if (compare(a,order)==0) zero(a);
+        if (mr_compare(a,order)==0) zero(a);
         return;
 
     }
-    if (compare(x,lim2)<0)
+    if (mr_compare(x,lim2)<0)
     {
         mad(x,x,x,p,p,x);
         premult(a,2,a);
-        if (compare(a,order)>=0) subtract(a,order,a);
+        if (mr_compare(a,order)>=0) subtract(a,order,a);
         premult(b,2,b);
-        if (compare(b,order)>=0) subtract(b,order,b);
+        if (mr_compare(b,order)>=0) subtract(b,order,b);
         return;
     }
     mad(x,r,r,p,p,x);
     incr(b,1,b);
-    if (compare(b,order)==0) zero(b);
+    if (mr_compare(b,order)==0) zero(b);
 }
 
 long rho(big q,big r,big m,big n)
@@ -76,9 +76,9 @@ long rho(big q,big r,big m,big n)
         {
             iter++;
             iterate(y,q,r,ay,by);
-            if (compare(x,y)==0) break;
+            if (mr_compare(x,y)==0) break;
         }
-    } while (compare(x,y)!=0);
+    } while (mr_compare(x,y)!=0);
     subtract(ax,ay,m);
     if (size(m)<0) add(m,order,m);
     subtract(by,bx,n);
