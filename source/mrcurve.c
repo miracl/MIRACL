@@ -1,7 +1,7 @@
 
 /***************************************************************************
                                                                            *
-Copyright 2013 CertiVox UK Ltd.                                           *
+Copyright 2013 CertiVox UK Ltd                                           *
                                                                            *
 This file is part of CertiVox MIRACL Crypto SDK.                           *
                                                                            *
@@ -873,8 +873,8 @@ static BOOL ecurve_padd(_MIPD_ epoint *p,epoint *pa)
     }
     if (pa->marker==MR_EPOINT_NORMALIZED)
         copy(mr_mip->one,mr_mip->w6);
-    
     else nres_modmult(_MIPP_ pa->Z,pa->Z,mr_mip->w6);
+
     nres_modmult(_MIPP_ p->X,mr_mip->w6,mr_mip->w4);
     if (pa->marker!=MR_EPOINT_NORMALIZED) 
         nres_modmult(_MIPP_ mr_mip->w6,pa->Z,mr_mip->w6);
@@ -1014,7 +1014,6 @@ BOOL epoint_comp(_MIPD_ epoint *a,epoint *b)
 
 int ecurve_add(_MIPD_ epoint *p,epoint *pa)
 {  /* pa=pa+p; */
-   /* An ephemeral pointer to the line slope is returned */
 
 #ifdef MR_OS_THREADS
     miracl *mr_mip=get_mip();
@@ -2152,7 +2151,7 @@ int ecurve_mult(_MIPD_ big e,epoint *pa,epoint *pt)
     }
     else
     { 
-        mem=ecp_memalloc(_MIPP_ 1);
+        mem=(char *)ecp_memalloc(_MIPP_ 1);
         p=epoint_init_mem(_MIPP_ mem,0);
         epoint_copy(pt,p);
 
@@ -2352,7 +2351,7 @@ void ecurve_mult2(_MIPD_ big e,epoint *p,big ea,epoint *pa,epoint *pt)
 #ifdef MR_STATIC
     memset(mem,0,MR_ECP_RESERVE(4));
 #else
-    mem=ecp_memalloc(_MIPP_ 4);
+    mem=(char *)ecp_memalloc(_MIPP_ 4);
 #endif
     p2=epoint_init_mem(_MIPP_ mem,0);
     p1=epoint_init_mem(_MIPP_ mem,1);
