@@ -298,15 +298,18 @@ int ECn3::add(const ECn3& W,ZZn3& lam,ZZn3 *ex1,ZZn3 *ex2)
 				return 0;     
 			}
 			ZZn3 t=x;
-			ZZn3 t2=x;
+			ZZn3 t1,t2=x;
 
      //   lam=(3*(x*x)+getA())/(y+y);
 			lam=x;
 			lam*=lam;
 			lam*=3;
 
-			if (twist==MR_QUADRATIC)	lam+=qnr*qnr*getA();
-			else						lam+=getA();
+			t1=getA();
+			if (twist==MR_QUADRATIC)	t1=qnr*qnr*t1;
+			if (twist==MR_QUARTIC_M)    t1=tx(t1);
+			if (twist==MR_QUARTIC_D)    t1=txd(t1);
+			lam+=t1;
 		
 			lam/=(y+y);    
 			t2+=x;
@@ -388,7 +391,7 @@ int ECn3::add(const ECn3& W,ZZn3& lam,ZZn3 *ex1,ZZn3 *ex2)
 			if (marker==MR_EPOINT_NORMALIZED) t1=1;
 			else {t1=z; t1*=t1;}
 			if (ex2!=NULL) *ex2=t1;
-			if (iA==-3)
+			if (iA==-3 && twist<=MR_QUADRATIC)
 			{
 				if (twist==MR_QUADRATIC) t1*=qnr;
 				lam=x-t1;
@@ -404,7 +407,9 @@ int ECn3::add(const ECn3& W,ZZn3& lam,ZZn3 *ex1,ZZn3 *ex2)
 				lam+=t2;
 				if (twist==MR_QUADRATIC) t1*=qnr;
 				t1*=t1;
-				if (iA==1)
+				if (twist==MR_QUARTIC_M) t1=tx(t1);
+				if (twist==MR_QUARTIC_D) t1=txd(t1);
+				if (iA!=1)
 				{
 					if (iA<MR_TOOBIG) t1*=iA;
 					else t1*=getA();
