@@ -381,7 +381,8 @@ int otstr(_MIPD_ flash x,char *string)
                 check=mr_mip->check;
                 mr_mip->check=OFF;
                 putdig(_MIPP_ 0,mr_mip->w6,i);
-                mr_mip->check=mr_mip->check;
+              /*  mr_mip->check=mr_mip->check; Nasty stupid bug! */
+				mr_mip->check=check;
                 if (mr_mip->apbase<=60)
                 { /* convert number to character */
                     ch+=48;
