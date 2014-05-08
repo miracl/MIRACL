@@ -222,6 +222,17 @@ void PFC::add_to_hash(const Big& x)
     }
 }
 
+
+void PFC::add_to_hash(char *x)
+{
+	int i=0;
+	while (x[i]!=0)
+	{
+		shs_process(&SH,x[i]);
+		i++;
+	}
+}
+
 Big H2(ZZn6 y)
 { // Hash and compress an Fp6 to a big number
     sha sh;

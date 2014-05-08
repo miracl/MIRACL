@@ -337,6 +337,7 @@ In the subdirectory SOURCE
   PAIRING_3.H  - High level type 3 pairings interface header
   AKE.CPP      - Pairing-based Authentiated Key Exchange
   BLS.CPP      - Pairing-based Short Signature Scheme
+  DAA.CPP      - Pairing-based Direct Anonymous Attestation
   BMC.CPP      - Pairing-based Signcryption scheme
   BLMQ.CPP     - Another pairing-based signcryption scheme
   BB1.CPP      - Boneh & Boyen BB1 IBE

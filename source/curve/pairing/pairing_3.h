@@ -281,6 +281,7 @@ public:
 	void add_to_hash(const G2&);
 	void add_to_hash(const GT&);
 	void add_to_hash(const Big&);
+	void add_to_hash(char *);
 	Big finish_hash_to_group(void);
 	Big finish_hash_to_aes_key(void);
 	void seed_rng(int s);

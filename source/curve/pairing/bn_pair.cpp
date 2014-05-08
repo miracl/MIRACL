@@ -230,6 +230,16 @@ void PFC::add_to_hash(const Big& x)
 }
 
 
+void PFC::add_to_hash(char *x)
+{
+	int i=0;
+	while (x[i]!=0)
+	{
+		shs256_process(&SH,x[i]);
+		i++;
+	}
+}
+
 Big H2(ZZn12 x)
 { // Compress and hash an Fp12 to a big number
     sha256 sh;

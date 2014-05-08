@@ -11,7 +11,7 @@ to test their protocol in a few lines of code, while exploiting
 all of the latest optimizations. The timings achieved are realistic
 and close to what can be expected from a real implementation.
 
-Fifteen example programs are supplied, which implement many of the schemes
+Sixteen example programs are supplied, which implement many of the schemes
 proposed in the P1363.3 standard. These are all written to use type-3 
 pairings
 
@@ -20,6 +20,7 @@ bls.cpp  - Boneh-Lynn-Shacham short signature
 bmc.cpp  - Barreto & McCullagh signcryption
 blmq.cpp - BLMQ signcryption
 bb1.cpp  - Boneh-Boyen BB1 IBE
+daa.cpp  - Direct Anonymous Attestation (Brickell & Li)
 fuzzy.cpp - Sahai-Waters Fuzzy IBE
 peks.cpp - Public Key Encryption with keyword search
 sk_3.cpp - Sakai-Kasahara IBE
@@ -46,6 +47,9 @@ Type-1 pairings are implemented on a super-singular curve defined over
 GF(2^m) (implementation in ss2_pair.cpp) or a super-singular curve 
 over GF(p) (implementation is ssp_pair.cpp). The former implements
 the eta_T pairing, and the latter the Tate pairing.
+
+** Note that super-singular curves over GF(2^m) are now considered weak,
+and do not provide the expected levels of security. Do not use them.
 
 Here the pairing is GT=e(G1,G1), where G1 and GT classes are defined in
 pairing_1.h
