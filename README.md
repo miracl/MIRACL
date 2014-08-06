@@ -41,7 +41,6 @@ The MIRACL library consists of well over 100 routines that cover all aspects of 
   <li>Follow @CertiVox on <a href="https://twitter.com/CertiVox">https://twitter.com/CertiVox</a></li>
   <li>Read and subscribe to <a href="http://www.certivox.com/blog/?__hstc=125798869.90d8a2c032af1fce3ac56bea6ee3c73a.1372068197871.1373639694528.1373644485299.25&amp;__hssc=125798869.8.1373644485299">Planet      CertiVox </a>&nbsp; for the latest news first </li>
   <li>Have a question that's not a      feature request or bug report? <u><a href="http://certivox.org/display/WLCM/Get+Involved">Ask on the mailing      list.</a></u></li>
-  <li>Chat with fellow developers in      IRC.  <a href="http://certivox.org/display/WLCM/Etiquette">See our IRC guidelines      here.</a></li>
 </ul>
 <h2>Contributing:</h2>
   CertiVox provides an Open Source suite of solutions for data security.  The CertiVox team firmly believes that our solutions and the organizations and users who benefit by them all derive value from active contributions from the community.<br />
