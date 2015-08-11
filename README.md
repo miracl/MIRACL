@@ -1,5 +1,7 @@
 MIRACL
 ======
+
+[![Join the chat at https://gitter.im/CertiVox/MIRACL](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CertiVox/MIRACL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 What is MIRACL?
 Multiprecision Integer and Rational Arithmetic Cryptographic Library – the MIRACL Crypto SDK – is a C software library that is widely regarded by developers as the gold standard open source SDK for elliptic curve cryptography (ECC).
 
