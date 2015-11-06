@@ -967,6 +967,85 @@ comba_sub(z,w,z);
     #endif
   #endif
 
+  #if MR_COMBA == 12
+    #ifndef MR_NOFULLWIDTH
+
+/* NIST P-384 curve */
+
+    a=t->w; b=k; c=z->w;
+    k[0]=k[1]=k[2]=k[3]=0; k[4]=a[21]; k[5]=a[22]; k[6]=a[23]; k[7]=k[8]=k[9]=k[10]=k[11]=0;
+
+/*** ADDITION ***/
+    overshoot=carry;
+    a=c; c=t->w;
+
+/*** INCREMENT ***/
+    overshoot+=carry;
+
+    k[0]=c[12]; k[1]=c[13]; k[2]=c[14]; k[3]=c[15]; k[4]=c[16]; k[5]=c[17]; k[6]=c[18]; k[7]=c[19]; k[8]=c[20]; k[9]=c[21]; k[10]=c[22]; k[11]=c[23];
+
+/*** INCREMENT ***/
+    overshoot+=carry;
+
+    k[0]=c[21]; k[1]=c[22]; k[2]=c[23]; k[3]=c[12]; k[4]=c[13]; k[5]=c[14]; k[6]=c[15]; k[7]=c[16]; k[8]=c[17]; k[9]=c[18]; k[10]=c[19]; k[11]=c[20];
+
+/*** INCREMENT ***/
+    overshoot+=carry;
+
+    k[0]=k[2]=0; k[1]=c[23]; k[3]=c[20]; k[4]=c[12]; k[5]=c[13]; k[6]=c[14]; k[7]=c[15]; k[8]=c[16]; k[9]=c[17]; k[10]=c[18]; k[11]=c[19];
+
+/*** INCREMENT ***/
+    overshoot+=carry;
+
+    k[0]=k[1]=k[2]=k[3]=0; k[4]=c[20]; k[5]=c[21]; k[6]=c[22]; k[7]=c[23]; k[8]=k[9]=k[10]=k[11]=0; 
+
+/*** INCREMENT ***/
+    overshoot+=carry;
+
+    k[0]=c[20]; k[1]=k[2]=0; k[3]=c[21]; k[4]=c[22]; k[5]=c[23]; k[6]=k[7]=k[8]=k[9]=k[10]=k[11]=0; 
+
+/*** INCREMENT ***/
+    overshoot+=carry;
+
+    k[0]=c[23]; k[1]=c[12]; k[2]=c[13]; k[3]=c[14]; k[4]=c[15]; k[5]=c[16]; k[6]=c[17]; k[7]=c[18]; k[8]=c[19]; k[9]=c[20]; k[10]=c[21]; k[11]=c[22];
+
+/*** DECREMENT ***/
+    overshoot-=carry;
+
+    k[0]=0; k[1]=c[20]; k[2]=c[21]; k[3]=c[22]; k[4]=c[23]; k[5]=k[6]=k[7]=k[8]=k[9]=k[10]=k[11]=0; 
+
+/*** DECREMENT ***/
+    overshoot-=carry;
+
+    k[0]=k[1]=k[2]=0; k[3]=k[4]=c[23]; k[5]=k[6]=k[7]=k[8]=k[9]=k[10]=k[11]=0; 
+
+/*** DECREMENT ***/
+    overshoot-=carry;
+
+    b=modulus->w;
+    while (overshoot>0)
+    {
+/*** DECREMENT ***/
+        overshoot-=carry;
+    }
+    while (overshoot<0)
+    {
+/*** INCREMENT ***/
+        overshoot+=carry;
+    }
+    if (z->w[MR_COMBA-1]>=modulus->w[MR_COMBA-1])
+    {
+        if (mr_compare(z,modulus)>=0)
+        {
+/*** DECREMENT ***/
+        }
+    }
+    if (z->w[MR_COMBA-1]==0) mr_lzero(z);
+
+    #endif
+  #endif
+
+
   #if MR_COMBA == 17
 
 /* Special Code for 2^521-1 - assuming 32-bit processor */
