@@ -1,0 +1,326 @@
+;
+; ARM64 Macros file for GCC compiler
+;
+; Author: Nick Kossifidis (Forthnet SE)
+;
+; This work was funded by ICSI (Intelligent Cooperative
+; Sensing for Improved traffic efficiency), an FP7 ICT
+; project (no. 317671).
+;
+; Note that only macros for Comba's method have been
+; implemented since KCM wasn't used in the project.
+;
+; See makemcs.txt for more information about this file
+; Triple register is x4,x3,x2
+;
+
+
+;
+; PMULT
+; Helper for fast reduction for 
+; pseudo mersenne prime moduli
+;
+MACRO PMUL_START
+  ASM (
+  "MOV x5,%%0\n"
+  "MOV x6,%%1\n"
+  "MOV x7,%%2\n"
+  "MOV x4,%%3\n"
+  "MOV x3,xzr\n"
+  "MOV x2,xzr\n"
+ENDM
+
+MACRO PMUL
+  "LDR x0,[x5,#(8*%d)]\n"
+  "MUL x8,x0,x4\n"
+  "UMULH x9,x0,x4\n"
+  "ADDS x8,x8,x3\n"
+  "ADC x3,x9,x2\n"
+  "STR x2,[x6,#(8*%d)]\n"
+  "STR x8,[x7,#(8*%d)]\n"
+ENDM
+
+MACRO PMUL_END
+  "MUL x8,x3,x4\n"
+  "UMULH x9,x3,x4\n"
+  "STR x8,[x6]\n"
+  "STR x9,[x6,#8]\n"
+  :
+  :"r"(a),"r"(b),"r"(c),"r"(sn)
+  :"x0","x1","x2","x3","x4","x5","x6","x7","x8","x9","memory" 
+  );
+ENDM
+
+
+;
+; MULTIPLY
+; Fast multi-precision multiplication
+;
+MACRO MUL_START
+  ASM (
+  "MOV x5,%%0\n"
+  "MOV x6,%%1\n"
+  "MOV x7,%%2\n"
+  "MOV x4,xzr\n"
+  "MOV x3,xzr\n"
+  "MOV x2,xzr\n"
+ENDM
+
+MACRO STEP
+  "LDR x0,[x5,#(8*%d)]\n"
+  "LDR x1,[x6,#(8*%d)]\n"
+  "MUL x8,x0,x1\n"
+  "UMULH x9,x0,x1\n"
+  "ADDS x2,x2,x8\n"
+  "ADCS x3,x3,x9\n"
+  "ADC  x4,x4,xzr\n"
+ENDM
+
+MACRO MFIN
+  "STR x2,[x7,#(8*%d)]\n"
+  "MOV x2,x3\n"
+  "MOV x3,x4\n"
+  "MOV x4,xzr\n"
+ENDM
+
+MACRO LAST
+  "LDR x0,[x5,#(8*%d)]\n"
+  "LDR x1,[x6,#(8*%d)]\n"
+  "MLA x2,x0,x1,x2\n"
+ENDM
+
+MACRO MUL_END  
+  "STR x2,[x7,#(8*%d)]\n"
+  :
+  :"r"(a),"r"(b),"r"(c)
+  :"x0","x1","x2","x3","x4","x5","x6","x7","x8","x9","memory" 
+  );
+ENDM
+
+
+;
+; SQUARE
+; Multi-precision squaring
+; 
+MACRO SQR_START
+  ASM (
+  "MOV x5,%%0\n"
+  "MOV x7,%%1\n"
+  "MOV x4,xzr\n"
+  "MOV x3,xzr\n"
+  "MOV x2,xzr\n"
+ENDM
+
+MACRO DSTEP
+  "LDR  x0,[x5,#(8*%d)]\n"
+  "LDR  x1,[x5,#(8*%d)]\n"
+  "MUL x8,x0,x1\n"
+  "UMULH x9,x0,x1\n"
+  "ADDS x2,x2,x8\n"
+  "ADCS x3,x3,x9\n"
+  "ADC  x4,x4,xzr\n"
+  "ADDS x2,x2,x8\n"
+  "ADCS x3,x3,x9\n"
+  "ADC  x4,x4,xzr\n"
+ENDM
+
+MACRO SELF
+  "LDR x0,[x5,#(8*%d)]\n"
+  "MUL x8,x0,x0\n"
+  "UMULH x9,x0,x0\n"
+  "ADDS x2,x2,x8\n"
+  "ADCS x3,x3,x9\n"
+  "ADC  x4,x4,xzr\n"
+ENDM
+
+MACRO SFIN
+  "STR x2,[x7,#(8*%d)]\n"
+  "MOV x2,x3\n"
+  "MOV x3,x4\n"
+  "MOV x4,xzr\n"
+ENDM
+
+MACRO SQR_END
+  "STR x2,[x7,#(8*%d)]\n"
+  :
+  :"r"(a),"r"(c)
+  :"x0","x1","x2","x3","x4","x5","x6","x7","x8","x9","memory"  
+  );
+ENDM
+
+
+;
+; REDC
+; Montgomery's modular reduction algorithm
+; calculates a%=b; It also accesses
+; the pre-computed variable "ndash"
+;
+MACRO REDC_START
+  ASM (
+  "MOV x5,%%0\n"
+  "MOV x6,%%1\n"
+  "MOV x7,%%2\n"
+  "MOV x4,xzr\n"
+  "MOV x3,xzr\n"
+  "LDR x2,[x5]\n"
+ENDM
+
+MACRO RFINU
+  "MUL x1,x7,x2\n"  
+  "STR x1,[x5,#(8*%d)]\n"
+  "LDR x0,[x6]\n"
+  "MUL x8,x0,x1\n"
+  "UMULH x9,x0,x1\n"
+  "ADDS x0,x2,x8\n"
+  "ADCS x2,x3,x9\n"
+  "ADC  x3,x4,xzr\n"
+  "LDR  x0,[x5,#(8*(%d+1))]\n"
+  "ADDS x2,x2,x0\n"
+  "ADC  x3,x3,xzr\n"
+  "MOV  x4,xzr\n"
+ENDM
+
+MACRO RFIND
+  "STR  x2,[x5,#(8*%d)]\n"
+  "LDR  x0,[x5,#(8*(%d+1))]\n"
+  "ADDS x2,x3,x0\n"
+  "ADC  x3,x4,xzr\n"
+  "MOV  x4,xzr\n"
+ENDM
+
+MACRO REDC_END
+  "STR  x2,[x5,#(8*%d)]\n"
+  "STR  x3,[x5,#(8*(%d+1))]\n"
+  :
+  :"r"(a),"r"(b),"r"(ndash)
+  :"x0","x1","x2","x3","x4","x5","x6","x7","x8","x9","memory"  
+  );
+ENDM
+
+
+;
+; ADDITION
+; Add two numbers from memory and store result in memory
+;
+MACRO ADD_START
+  ASM (
+  "MOV  x6,%%1\n"
+  "MOV  x7,%%2\n"
+  "MOV  x8,%%3\n"
+  "LDR  x0,[x6]\n"
+  "LDR  x1,[x7]\n"
+  "ADDS x0,x0,x1\n"
+  "STR  x0,[x8]\n"
+ENDM
+
+MACRO ADD
+  "LDR  x0,[x6,#(8*%d)]\n"
+  "LDR  x1,[x7,#(8*%d)]\n"
+  "ADCS x0,x0,x1\n"
+  "STR  x0,[x8,#(8*%d)]\n"
+ENDM
+
+MACRO ADD_END
+  "MOV x0,xzr\n"
+  "CSINC x0,x0,x0,LO\n"
+  "MOV %%0,x0\n"
+  :"=r"(carry)
+  :"r"(a),"r"(b),"r"(c)
+  :"x0","x1","x6","x7","x8","memory"
+  );
+ENDM
+
+
+;
+; INCREMENT
+; Same as above but calculates a+=b
+;
+MACRO INC_START
+  ASM (
+  "MOV  x6,%%1\n"
+  "MOV  x7,%%2\n"
+  "LDR  x0,[x6]\n"
+  "LDR  x1,[x7]\n"
+  "ADDS x0,x0,x1\n"
+  "STR  x0,[x6]\n"
+ENDM
+
+MACRO INC
+  "LDR  x0,[x6,#(8*%d)]\n"
+  "LDR  x1,[x7,#(8*%d)]\n"
+  "ADCS x0,x0,x1\n"
+  "STR  x0,[x6,#(8*%d)]\n"
+ENDM
+
+MACRO INC_END
+  "MOV x0,xzr\n"
+  "CSINC x0,x0,x0,LO\n"
+  "MOV %%0,x0\n"
+  :"=r"(carry)
+  :"r"(a),"r"(b)
+  :"x0","x1","x6","x7","memory"
+  );
+ENDM
+
+
+;
+; SUBTRACTION
+;
+MACRO SUB_START
+  ASM (
+  "MOV x6,%%1\n"
+  "MOV x7,%%2\n"
+  "MOV x8,%%3\n"
+  "LDR  x0,[x6]\n"
+  "LDR  x1,[x7]\n"
+  "SUBS x0,x0,x1\n"
+  "STR  x0,[x8]\n"
+ENDM
+
+MACRO SUB
+  "LDR  x0,[x6,#(8*%d)]\n"
+  "LDR  x1,[x7,#(8*%d)]\n"
+  "SBCS x0,x0,x1\n"
+  "STR  x0,[x8,#(8*%d)]\n"
+ENDM
+
+MACRO SUB_END
+  "MOV x0,xzr\n"
+  "CSINC x0,x0,x0,HS\n"
+  "MOV %%0,x0\n"
+  :"=r"(carry)
+  :"r"(a),"r"(b),"r"(c)
+  :"x0","x1","x6","x7","x8","memory"
+  );
+ENDM
+
+
+;
+; DECREMENT
+;
+MACRO DEC_START
+  ASM (
+  "MOV x6,%%1\n"
+  "MOV x7,%%2\n"
+  "LDR  x0,[x6]\n"
+  "LDR  x1,[x7]\n"
+  "SUBS x0,x0,x1\n"
+  "STR  x0,[x6]\n"
+ENDM
+
+MACRO DEC
+  "LDR  x0,[x6,#(8*%d)]\n"
+  "LDR  x1,[x7,#(8*%d)]\n"
+  "SBCS x0,x0,x1\n"
+  "STR  x0,[x6,#(8*%d)]\n"
+ENDM
+
+MACRO DEC_END
+  "MOV x0,xzr\n"
+  "CSINC x0,x0,x0,HS\n"
+  "MOV %%0,x0\n"
+  :"=r"(carry)
+  :"r"(a),"r"(b)
+  :"x0","x1","x6","x7","memory"
+  );
+ENDM
