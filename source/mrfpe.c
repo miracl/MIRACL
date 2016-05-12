@@ -201,7 +201,7 @@ void FPE_encrypt(int s,aes *a,UINT32 TL,UINT32 TR,char *x,int len)
 	}
 	rest=len%mb;
 	c=0; i=0;
-	while (len-c>mb)
+	while (len-c>=mb)
 	{
 		if (i!=0) for (j=c;j<c+mb;j++) x[j]=(x[j]+x[j-mb])%s;
 		BC(ENCRYPT,&x[c],mb,s,a,TL^(i<<16),TR^(i<<16));
