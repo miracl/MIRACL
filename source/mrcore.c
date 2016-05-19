@@ -1604,11 +1604,13 @@ void mr_and(big x,big y,big z)
 #endif
     if (ny<nx) nr=ny;
     else       nr=nx;
+
     for (i=0;i<nr;i++)
         z->w[i]=x->w[i]&y->w[i];
     for (i=nr;i<nz;i++) 
         z->w[i]=0;
     z->len=nr;
+	mr_lzero(z);
 }
 
 void mr_xor(big x,big y,big z)
@@ -1637,6 +1639,7 @@ void mr_xor(big x,big y,big z)
      for (i=nr;i<nz;i++)
          z->w[i]=0;
      z->len=nr;
+	 mr_lzero(z);
 }
 
 #endif
