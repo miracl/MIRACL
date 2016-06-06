@@ -40,14 +40,15 @@ the CertiVox MIRACL Crypto SDK with a closed source product.               *
  *
  * Uses AES internally
  *
- * Author: M. Scott 2012
+ * Author: M. Scott 2012/2015
  */
 
 #include <stdlib.h> 
 #include "miracl.h"
 
-/* Define this to activate test main program */
+/* Define FPE_TEST to activate test main program and run test vectors */
 /* Link with mraes.c */
+/* gcc -O2 mrfpe.c mraes.c -o mrfpe.exe */
 /* #define FPE_TEST */
 
 #define UINT32 mr_unsign32 /* 32-bit unsigned type */
@@ -243,25 +244,29 @@ void FPE_decrypt(int s,aes *a,UINT32 TL,UINT32 TR,char *x,int len)
 	}
 }
 
-/* Test Program */
+/* Test Program - runs NIST test vectors from http://csrc.nist.gov/groups/ST/toolkit/documents/Examples/FF3samples.pdf */
 
 #ifdef FPE_TEST
 
 int main()
 {
-	int i,n;
+	int i,n,radix;
 	aes a;
-	char key[16];
+	char key[32];
 	char x[256];    /* any length... */
 	UINT32 TL,TR;
 
-	TR=0; /* random tweaks */
-	TL=0xFFFFFFFF;
+//# sample #1
+
+	radix=10;
+	TL=0xD8E7920A;
+	TR=0xFA330A73; /* random tweaks */
 
 /* Set AES key */
+//EF 43 59 D8 D5 80 AA 4F 7F 03 6D 6F 04 FC 6A 94 
 
-	key[0]=0x01; key[1]=0x01; key[2]=0x01; key[3]=0x01; key[4]=0x01; key[5]=0x01; key[6]=0x01; key[7]=0x01;
-	key[8]=0x01; key[9]=0x01; key[10]=0x01; key[11]=0x01; key[12]=0x01; key[13]=0x01; key[14]=0x01; key[15]=0x01;
+	key[15]=0xEF; key[14]=0x43; key[13]=0x59; key[12]=0xD8; key[11]=0xD5; key[10]=0x80; key[9]=0xAA; key[8]=0x4F;
+	key[7]=0x7F; key[6]=0x03; key[5]=0x6D; key[4]=0x6F; key[3]=0x04; key[2]=0xFC; key[1]=0x6A; key[0]=0x94;
 
 	printf("aes key= ");
 	for (i=0;i<16;i++)
@@ -270,66 +275,375 @@ int main()
 
     aes_init(&a,MR_ECB,16,key,NULL);
 
-	x[0]=1; x[1]=4; x[2]=2; x[3]=5; x[4]=6; x[5]=9; x[6]=8; x[7]=7;
-	x[8]=2; x[9]=1; x[10]=5; x[11]=4; x[12]=6; x[13]=5; x[14]=3; x[15]=2;
+	n=18;
+	x[0]=8; x[1]=9; x[2]=0; x[3]=1; x[4]=2; x[5]=1; x[6]=2; x[7]=3;
+	x[8]=4; x[9]=5; x[10]=6; x[11]=7; x[12]=8; x[13]=9; x[14]=0; x[15]=0; x[16]=0; x[17]=0;
 
 /* Encrypt/decrypt short string */
 
+	printf("\nSample #1\n");
 	printf("Plaintext=\n");
-	for (i=0;i<16;i++) printf("%d ",x[i]);
+	for (i=0;i<n;i++) printf("%d ",x[i]);
 	printf("\n");
-	FPE_encrypt(10,&a,TL,TR,x,16);
+	FPE_encrypt(radix,&a,TL,TR,x,n);
 
 	printf("Ciphertext=\n");
-	for (i=0;i<16;i++) printf("%d ",x[i]);
+	for (i=0;i<n;i++) printf("%d ",x[i]);
 	printf("\n");
-	FPE_decrypt(10,&a,TL,TR,x,16);
-
-	printf("Plaintext=\n");
-	for (i=0;i<16;i++) printf("%d ",x[i]);
-	printf("\n");
-
-	printf("maxb= %d\n",maxb(10));
-
-/* Now encrypt/decrypt longer string */
-
-	for (i=0;i<83;i++) x[i]=i%10;
-
-	printf("Plaintext=\n");
-	for (i=0;i<83;i++) printf("%d ",x[i]);
-	printf("\n");
-
-	FPE_encrypt(10,&a,TL,TR,x,83);
-
-	printf("Ciphertext=\n");
-	for (i=0;i<83;i++) printf("%d ",x[i]);
-	printf("\n");
-
-	FPE_decrypt(10,&a,TL,TR,x,83);
-
-	printf("Plaintext=\n");
-	for (i=0;i<83;i++) printf("%d ",x[i]);
-	printf("\n");
-
-
-n=97;
-	for (i=0;i<n;i++) x[i]=i%10;
+	FPE_decrypt(radix,&a,TL,TR,x,n);
 
 	printf("Plaintext=\n");
 	for (i=0;i<n;i++) printf("%d ",x[i]);
 	printf("\n");
 
-	FPE_encrypt(10,&a,TL,TR,x,n);
+//sample #2
+
+	TL=0x9A768A92;
+	TR=0xF60E12D8;
+
+/* Encrypt/decrypt short string */
+
+	printf("\nSample #2\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
 
 	printf("Ciphertext=\n");
 	for (i=0;i<n;i++) printf("%d ",x[i]);
 	printf("\n");
-
-	FPE_decrypt(10,&a,TL,TR,x,n);
+	FPE_decrypt(radix,&a,TL,TR,x,n);
 
 	printf("Plaintext=\n");
 	for (i=0;i<n;i++) printf("%d ",x[i]);
 	printf("\n");
+
+//sample #3
+
+	n=29;
+	x[0]=8; x[1]=9; x[2]=0; x[3]=1; x[4]=2; x[5]=1; x[6]=2; x[7]=3;
+	x[8]=4; x[9]=5; x[10]=6; x[11]=7; x[12]=8; x[13]=9; x[14]=0; x[15]=0; x[16]=0; x[17]=0;
+	x[18]=0; x[19]=0; x[20]=7; x[21]=8; x[22]=9; x[23]=0; x[24]=0; x[25]=0; x[26]=0; x[27]=0; x[28]=0;
+
+	TL=0xD8E7920A;
+	TR=0xFA330A73; /* random tweaks */
+
+/* Encrypt/decrypt short string */
+
+	printf("\nSample #3\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+
+// sample #4
+	TL=0x0;
+	TR=0x0;
+
+	printf("\nSample #4\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #5
+
+	radix=26;
+	TL=0x9A768A92;
+	TR=0xF60E12D8;
+
+	n=19;
+	x[0]=0; x[1]=1; x[2]=2; x[3]=3; x[4]=4; x[5]=5; x[6]=6; x[7]=7;
+	x[8]=8; x[9]=9; x[10]=10; x[11]=11; x[12]=12; x[13]=13; x[14]=14; x[15]=15; x[16]=16; x[17]=17;
+	x[18]=18; 
+
+	printf("\nSample #5\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #6
+
+	key[23]=0xEF; key[22]=0x43; key[21]=0x59; key[20]=0xD8; key[19]=0xD5; key[18]=0x80; key[17]=0xAA; key[16]=0x4F;
+	key[15]=0x7F; key[14]=0x03; key[13]=0x6D; key[12]=0x6F; key[11]=0x04; key[10]=0xFC; key[9]=0x6A;  key[8]=0x94;
+	key[7]=0x2b;  key[6]=0x7E;  key[5]=0x15;  key[4]=0x16;  key[3]=0x28;  key[2]=0xAE;  key[1]=0xD2;  key[0]=0xA6;
+
+	printf("aes key= ");
+	for (i=0;i<16;i++)
+		printf("%02x",(unsigned char) key[i]);
+	printf("\n");
+
+    aes_init(&a,MR_ECB,24,key,NULL);
+
+	n=18;
+	x[0]=8; x[1]=9; x[2]=0; x[3]=1; x[4]=2; x[5]=1; x[6]=2; x[7]=3;
+	x[8]=4; x[9]=5; x[10]=6; x[11]=7; x[12]=8; x[13]=9; x[14]=0; x[15]=0; x[16]=0; x[17]=0;
+
+	radix=10;
+	TL=0xD8E7920A;
+	TR=0xFA330A73; /* random tweaks */
+
+	printf("\nSample #6\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #7
+
+	TL=0x9A768A92;
+	TR=0xF60E12D8;
+
+	printf("\nSample #7\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #8
+
+	n=29;
+	x[0]=8; x[1]=9; x[2]=0; x[3]=1; x[4]=2; x[5]=1; x[6]=2; x[7]=3;
+	x[8]=4; x[9]=5; x[10]=6; x[11]=7; x[12]=8; x[13]=9; x[14]=0; x[15]=0; x[16]=0; x[17]=0;
+	x[18]=0; x[19]=0; x[20]=7; x[21]=8; x[22]=9; x[23]=0; x[24]=0; x[25]=0; x[26]=0; x[27]=0; x[28]=0;
+
+	TL=0xD8E7920A;
+	TR=0xFA330A73; /* random tweaks */
+
+	printf("\nSample #8\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #9
+
+	TL=0x0;
+	TR=0x0;
+
+	printf("\nSample #9\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #10
+
+	radix=26;
+	TL=0x9A768A92;
+	TR=0xF60E12D8;
+
+	n=19;
+	x[0]=0; x[1]=1; x[2]=2; x[3]=3; x[4]=4; x[5]=5; x[6]=6; x[7]=7;
+	x[8]=8; x[9]=9; x[10]=10; x[11]=11; x[12]=12; x[13]=13; x[14]=14; x[15]=15; x[16]=16; x[17]=17;
+	x[18]=18; 
+
+	printf("\nSample #10\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #11
+
+	key[31]=0xEF; key[30]=0x43; key[29]=0x59; key[28]=0xD8; key[27]=0xD5; key[26]=0x80; key[25]=0xAA; key[24]=0x4F;
+	key[23]=0x7F; key[22]=0x03; key[21]=0x6D; key[20]=0x6F; key[19]=0x04; key[18]=0xFC; key[17]=0x6A; key[16]=0x94;
+	key[15]=0x2b; key[14]=0x7E; key[13]=0x15; key[12]=0x16; key[11]=0x28; key[10]=0xAE; key[9]=0xD2;  key[8]=0xA6;
+	key[7]=0xAB;  key[6]=0xF7;  key[5]=0x15;  key[4]=0x88;  key[3]=0x09;  key[2]=0xCF;  key[1]=0x4F;  key[0]=0x3C;
+
+	printf("aes key= ");
+	for (i=0;i<16;i++)
+		printf("%02x",(unsigned char) key[i]);
+	printf("\n");
+
+    aes_init(&a,MR_ECB,32,key,NULL);
+
+	n=18;
+	x[0]=8; x[1]=9; x[2]=0; x[3]=1; x[4]=2; x[5]=1; x[6]=2; x[7]=3;
+	x[8]=4; x[9]=5; x[10]=6; x[11]=7; x[12]=8; x[13]=9; x[14]=0; x[15]=0; x[16]=0; x[17]=0;
+
+	radix=10;
+	TL=0xD8E7920A;
+	TR=0xFA330A73; /* random tweaks */
+
+	printf("\nSample #11\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #12
+
+	TL=0x9A768A92;
+	TR=0xF60E12D8;
+
+	printf("\nSample #12\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #13
+
+	n=29;
+	x[0]=8; x[1]=9; x[2]=0; x[3]=1; x[4]=2; x[5]=1; x[6]=2; x[7]=3;
+	x[8]=4; x[9]=5; x[10]=6; x[11]=7; x[12]=8; x[13]=9; x[14]=0; x[15]=0; x[16]=0; x[17]=0;
+	x[18]=0; x[19]=0; x[20]=7; x[21]=8; x[22]=9; x[23]=0; x[24]=0; x[25]=0; x[26]=0; x[27]=0; x[28]=0;
+
+	TL=0xD8E7920A;
+	TR=0xFA330A73; /* random tweaks */
+
+	printf("\nSample #13\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #14
+
+	TL=0x0;
+	TR=0x0; /* random tweaks */
+
+	printf("\nSample #14\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
+
+// sample #15
+
+	radix=26;
+	TL=0x9A768A92;
+	TR=0xF60E12D8;
+
+	n=19;
+	x[0]=0; x[1]=1; x[2]=2; x[3]=3; x[4]=4; x[5]=5; x[6]=6; x[7]=7;
+	x[8]=8; x[9]=9; x[10]=10; x[11]=11; x[12]=12; x[13]=13; x[14]=14; x[15]=15; x[16]=16; x[17]=17;
+	x[18]=18; 
+
+	printf("\nSample #15\n");
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_encrypt(radix,&a,TL,TR,x,n);
+
+	printf("Ciphertext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+	FPE_decrypt(radix,&a,TL,TR,x,n);
+
+	printf("Plaintext=\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n"); 
 
 	return 0;
 }
