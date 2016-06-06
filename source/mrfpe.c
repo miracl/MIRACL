@@ -250,7 +250,7 @@ void FPE_decrypt(int s,aes *a,UINT32 TL,UINT32 TR,char *x,int len)
 
 int main()
 {
-	int i,n,radix;
+	int i,j,n,radix;
 	aes a;
 	char key[32];
 	char x[256];    /* any length... */
@@ -268,7 +268,7 @@ int main()
 	key[15]=0xEF; key[14]=0x43; key[13]=0x59; key[12]=0xD8; key[11]=0xD5; key[10]=0x80; key[9]=0xAA; key[8]=0x4F;
 	key[7]=0x7F; key[6]=0x03; key[5]=0x6D; key[4]=0x6F; key[3]=0x04; key[2]=0xFC; key[1]=0x6A; key[0]=0x94;
 
-	printf("aes key= ");
+	printf("\n128 bit aes key= ");
 	for (i=0;i<16;i++)
 		printf("%02x",(unsigned char) key[i]);
 	printf("\n");
@@ -396,8 +396,8 @@ int main()
 	key[15]=0x7F; key[14]=0x03; key[13]=0x6D; key[12]=0x6F; key[11]=0x04; key[10]=0xFC; key[9]=0x6A;  key[8]=0x94;
 	key[7]=0x2b;  key[6]=0x7E;  key[5]=0x15;  key[4]=0x16;  key[3]=0x28;  key[2]=0xAE;  key[1]=0xD2;  key[0]=0xA6;
 
-	printf("aes key= ");
-	for (i=0;i<16;i++)
+	printf("\n192-bit aes key= ");
+	for (i=0;i<24;i++)
 		printf("%02x",(unsigned char) key[i]);
 	printf("\n");
 
@@ -524,8 +524,8 @@ int main()
 	key[15]=0x2b; key[14]=0x7E; key[13]=0x15; key[12]=0x16; key[11]=0x28; key[10]=0xAE; key[9]=0xD2;  key[8]=0xA6;
 	key[7]=0xAB;  key[6]=0xF7;  key[5]=0x15;  key[4]=0x88;  key[3]=0x09;  key[2]=0xCF;  key[1]=0x4F;  key[0]=0x3C;
 
-	printf("aes key= ");
-	for (i=0;i<16;i++)
+	printf("\n256-bit aes key= ");
+	for (i=0;i<32;i++)
 		printf("%02x",(unsigned char) key[i]);
 	printf("\n");
 
@@ -644,6 +644,43 @@ int main()
 	printf("Plaintext=\n");
 	for (i=0;i<n;i++) printf("%d ",x[i]);
 	printf("\n"); 
+
+// Timing Test
+
+	radix=10;
+	TL=0xD8E7920A;
+	TR=0xFA330A73; /* random tweaks */
+
+/* Set 128-bit AES key */
+
+	key[15]=0xEF; key[14]=0x43; key[13]=0x59; key[12]=0xD8; key[11]=0xD5; key[10]=0x80; key[9]=0xAA; key[8]=0x4F;
+	key[7]=0x7F; key[6]=0x03; key[5]=0x6D; key[4]=0x6F; key[3]=0x04; key[2]=0xFC; key[1]=0x6A; key[0]=0x94;
+
+	printf("\n128-bit aes key= ");
+	for (i=0;i<16;i++)
+		printf("%02x",(unsigned char) key[i]);
+	printf("\n");
+
+    aes_init(&a,MR_ECB,16,key,NULL);
+
+	n=18;
+	x[0]=8; x[1]=9; x[2]=0; x[3]=1; x[4]=2; x[5]=1; x[6]=2; x[7]=3;
+	x[8]=4; x[9]=5; x[10]=6; x[11]=7; x[12]=8; x[13]=9; x[14]=0; x[15]=0; x[16]=0; x[17]=0;
+
+/* Encrypt/decrypt short string */
+
+	printf("\nTiming test for 1 million encryption/decryptions\n");
+	printf("Start..\n");
+
+	for (j=0;j<1000000;j++)
+	{
+		FPE_encrypt(radix,&a,TL,TR,x,n);
+		FPE_decrypt(radix,&a,TL,TR,x,n);
+	}
+	printf("Finished\n");
+	for (i=0;i<n;i++) printf("%d ",x[i]);
+	printf("\n");
+
 
 	return 0;
 }

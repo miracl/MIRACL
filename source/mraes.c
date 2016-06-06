@@ -49,6 +49,13 @@ the CertiVox MIRACL Crypto SDK with a closed source product.               *
 #include <stdlib.h> 
 #include "miracl.h"
 
+/* Define this if INTEL AES-NI intrinsics are supported - for example with GCC compiler */ 
+/* #define AES_NI_SUPPORT */
+
+#ifdef AES_NI_SUPPORT
+#include <wmmintrin.h> 
+#endif
+
 #define MR_WORD mr_unsign32
 
 /* this is fixed */
@@ -654,6 +661,23 @@ void aes_ecb_encrypt(aes *a,MR_BYTE *buff)
     int i,j,k;
     MR_WORD p[4],q[4],*x,*y,*t;
 
+#ifdef AES_NI_SUPPORT
+	__m128i ky,m = _mm_loadu_si128((__m128i *) buff);
+	ky = _mm_loadu_si128((__m128i *) &a->fkey[0]);
+    m = _mm_xor_si128       (m, ky); 
+	k=NB;
+	for (i=1;i<a->Nr;i++)
+	{
+		ky=_mm_loadu_si128((__m128i *) &a->fkey[k]);
+		m =_mm_aesenc_si128(m, ky); 
+		k+=4;
+	}
+	ky=_mm_loadu_si128((__m128i *) &a->fkey[k]);
+    m=_mm_aesenclast_si128(m, ky);
+
+    _mm_storeu_si128((__m128i *)buff, m);
+#else
+
     for (i=j=0;i<NB;i++,j+=4)
     {
         p[i]=pack((MR_BYTE *)&buff[j]);
@@ -729,12 +753,30 @@ void aes_ecb_encrypt(aes *a,MR_BYTE *buff)
         unpack(y[i],(MR_BYTE *)&buff[j]);
         x[i]=y[i]=0;   /* clean up stack */
     }
+#endif
 }
 
 void aes_ecb_decrypt(aes *a,MR_BYTE *buff)
 {
     int i,j,k;
     MR_WORD p[4],q[4],*x,*y,*t;
+
+#ifdef AES_NI_SUPPORT
+	__m128i ky,m = _mm_loadu_si128((__m128i *) buff);
+	ky = _mm_loadu_si128((__m128i *) &a->rkey[0]);
+    m = _mm_xor_si128       (m, ky); 
+	k=NB;
+	for (i=1;i<a->Nr;i++)
+	{
+		ky=_mm_loadu_si128((__m128i *) &a->rkey[k]);
+		m =_mm_aesdec_si128    (m, ky); 
+		k+=4;
+	}
+	ky=_mm_loadu_si128((__m128i *) &a->rkey[k]);
+    m=_mm_aesdeclast_si128(m, ky);
+
+    _mm_storeu_si128((__m128i *)buff, m);
+#else
 
     for (i=j=0;i<NB;i++,j+=4)
     {
@@ -810,7 +852,7 @@ void aes_ecb_decrypt(aes *a,MR_BYTE *buff)
         unpack(y[i],(MR_BYTE *)&buff[j]);
         x[i]=y[i]=0;   /* clean up stack */
     }
-
+#endif
 }
 
 mr_unsign32 aes_encrypt(aes* a,char *buff)
