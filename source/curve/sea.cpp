@@ -1625,7 +1625,7 @@ int main(int argc,char **argv)
 		}
 		else
 		{
-			ZZn X,Y,Z,R,TA,TB,TC,TD,TE;
+			ZZn X,Y,Z,R,TA,TB,TC,TD,TE,TU;
 			forever
 			{
 				X=randn();
@@ -1640,9 +1640,10 @@ int main(int argc,char **argv)
 			{
 				TA = X*X;
 				TB = Y*Y;
-				TC = TA+TB;
-				TD = TA-TB;
-				TE = (X+Y)*(X+Y)-TC;
+				TU = EA*TB;
+				TC = TA+TU;
+				TD = TA-TU;
+				TE = (X+Y)*(X+Y)-TA-TB;
 			
 				X = TC*TD;
 				Y = TE*(TC-2*EB*Z*Z);
