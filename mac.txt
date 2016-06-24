@@ -11,3 +11,7 @@ On a MAC using GCC, use the flag
 when compiling MIRACL assembly language modules..
 
 (Thanks Augusto)
+
+There is also a known problem with the mac port of g++ involving friend
+declarations in big.h and zzn.h. This can be solved by substituting the files
+in ./source/mac for the ones found in ./include and ./source
