@@ -6,6 +6,9 @@ and in the latter it always uses the optimal ate pairing. It can be
 used to implement a pairing-based protocol in almost the same amount 
 of space it takes to describe it.
 
+*** NOTE: Pairings over GF(2^m) are effectively broken and should
+no longer be used ****
+
 This is particularly useful for the protocol developer who wants
 to test their protocol in a few lines of code, while exploiting
 all of the latest optimizations. The timings achieved are realistic
@@ -19,7 +22,6 @@ ake.cpp  - Scott's key exchange
 bls.cpp  - Boneh-Lynn-Shacham short signature
 bmc.cpp  - Barreto & McCullagh signcryption
 blmq.cpp - BLMQ signcryption
-bb1.cpp  - Boneh-Boyen BB1 IBE
 daa.cpp  - Direct Anonymous Attestation (Brickell & Li)
 fuzzy.cpp - Sahai-Waters Fuzzy IBE
 peks.cpp - Public Key Encryption with keyword search

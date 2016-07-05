@@ -300,6 +300,11 @@ void force(ZZn& x,ZZn& y,ECn& A)
 
 void extract(ECn& A,ZZn& x,ZZn& y)
 { // (x,y) <- A
+	if (A.iszero())
+	{
+		x=0; y=0;
+		return;
+	}
     x=(A.get_point())->X;
     y=(A.get_point())->Y;
 }
@@ -1433,6 +1438,7 @@ G2 operator+(const G2& x,const G2& y)
 {
 	G2 z=x;
 	ECn2 t=y.g;
+	t.norm();
 	z.g+=t;
 	return z;
 }

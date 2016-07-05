@@ -370,6 +370,7 @@ In the subdirectory SOURCE
   MIRDEF.HAF   -    Header file for 16 bit use of 32 bit computer
   MIRDEF.HIO   -    Integer-Only 32-bit header file
   MIRDEF.HPP   -    Header file for full 64-bit Computer - C++ Library Build - see linux64_cpp
+  MIRDEF.MGW   -    Header file for 64-bit mingw build
   MIRACL.H     -    Main MIRACL header
   BIG.H        -    C++ header for 'big' numbers
   FLASH.H      -    C++ header for 'flash' numbers
@@ -387,6 +388,7 @@ In the subdirectory SOURCE
   In the subdirectory LIB
 
   *DOIT.BAT    -    Batch files for constructing libraries and sample progs.
+  MINGW.BAT    -    Batch file to build library for 64-bit MINGW
   MIRACL.MAK   -    John Kennedy's UNIX make file
   LINUX        -    Linux bash script to build library - 32-bit
   LINUX64      -    Linux bash script to build library - 64-bit - C Library Build
