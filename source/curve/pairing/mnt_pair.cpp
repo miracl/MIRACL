@@ -969,7 +969,7 @@ int GT::spill(char *& bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*6*bytes_per_big;
+	int len=n*6*bytes_per_big+1;
 	ZZn2 a,b,c;
 	Big x,y;
 
@@ -995,6 +995,7 @@ int GT::spill(char *& bytes)
 		to_binary(y,bytes_per_big,&bytes[j],TRUE);
 		j+=bytes_per_big;
 	}
+	bytes[j]=etbits;
 	delete [] etable; 
 	etable=NULL;
 	return len;
@@ -1008,7 +1009,7 @@ void GT::restore(char *bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*6*bytes_per_big;
+//	int len=n*6*bytes_per_big;
 	ZZn2 a,b,c;
 	Big x,y;
 	if (etable!=NULL) return;
@@ -1033,6 +1034,7 @@ void GT::restore(char *bytes)
 		c.set(x,y);
 		etable[i].set(a,b,c);
 	}
+	etbits=bytes[j];
 	delete [] bytes;
 }
 
@@ -1059,7 +1061,7 @@ int G1::spill(char *& bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*2*bytes_per_big;
+	int len=n*2*bytes_per_big+1;
 	Big x,y;
 
 	if (mtable==NULL) return 0;
@@ -1073,6 +1075,7 @@ int G1::spill(char *& bytes)
 		to_binary(y,bytes_per_big,&bytes[j],TRUE);
 		j+=bytes_per_big;
 	}
+	bytes[j]=mtbits;
 	delete [] mtable; 
 	mtable=NULL;
 	return len;
@@ -1086,7 +1089,7 @@ void G1::restore(char *bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*2*bytes_per_big;
+//	int len=n*2*bytes_per_big;
 	Big x,y;
 	if (mtable!=NULL) return;
 
@@ -1099,6 +1102,7 @@ void G1::restore(char *bytes)
 		j+=bytes_per_big;
 		mtable[i].set(x,y);
 	}
+	mtbits=bytes[j];
 	delete [] bytes;
 }
 
@@ -1125,7 +1129,7 @@ int G2::spill(char *& bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*6*bytes_per_big;
+	int len=n*6*bytes_per_big+1;
 	ZZn3 x,y;
 	ZZn a,b,c;
 
@@ -1150,6 +1154,7 @@ int G2::spill(char *& bytes)
 		to_binary((Big)c,bytes_per_big,&bytes[j],TRUE);
 		j+=bytes_per_big;
 	}
+	bytes[j]=mtbits;
 	delete [] mtable; 
 	mtable=NULL;
 	return len;
@@ -1163,7 +1168,7 @@ void G2::restore(char *bytes)
 {
 	int i,j,n=(1<<WINDOW_SIZE);
 	int bytes_per_big=(MIRACL/8)*(get_mip()->nib-1);
-	int len=n*6*bytes_per_big;
+//	int len=n*6*bytes_per_big;
 	ZZn3 x,y;
 	ZZn a,b,c;
 	if (mtable!=NULL) return;
@@ -1187,6 +1192,7 @@ void G2::restore(char *bytes)
 		y.set(a,b,c);
 		mtable[i].set(x,y);
 	}
+	mtbits=bytes[j];
 	delete [] bytes;
 }
 
