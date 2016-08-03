@@ -49,7 +49,7 @@ the CertiVox MIRACL Crypto SDK with a closed source product.               *
 #include <stdlib.h> 
 #include "miracl.h"
 
-/* Define this if INTEL AES-NI intrinsics are supported - for example with GCC compiler */ 
+/* Define this if INTEL AES-NI intrinsics are supported - for example with GCC compiler - use flag -maes */ 
 /* #define AES_NI_SUPPORT */
 
 #ifdef AES_NI_SUPPORT

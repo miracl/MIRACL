@@ -195,8 +195,12 @@ BOOL gcm_add_cipher(gcm *g,int mode,char *plain,int len,char *cipher)
 			else
 			{
 				if (mode==GCM_ENCRYPTING) cipher[j]=plain[j]^B[i];
+				g->stateX[i]^=cipher[j];
 				if (mode==GCM_DECRYPTING) plain[j]=cipher[j]^B[i];
-				g->stateX[i]^=cipher[j++];
+				j++;
+				/*if (mode==GCM_ENCRYPTING) cipher[j]=plain[j]^B[i];
+				if (mode==GCM_DECRYPTING) plain[j]=cipher[j]^B[i];
+				g->stateX[i]^=cipher[j++]; */
 			}
 			g->lenC[1]++; if (g->lenC[1]==0) g->lenC[0]++;
 		}
