@@ -1487,9 +1487,11 @@ functions. But it works!
             #endif
         #endif
         #if _MSC_VER>=1000
-            #if MIRACL==32
-                #define INLINE_ASM 3
-            #endif
+			#if _MSC_VER<1500
+				#if MIRACL==32
+					#define INLINE_ASM 3
+				#endif
+			#endif
         #endif     
     #endif       
     #endif
