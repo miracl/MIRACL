@@ -299,7 +299,7 @@ public:
               {if (mr_compare(b1.fn,b2.fn)>0) return TRUE; else return FALSE;}
 
     friend Big from_binary(int,char *);
-    friend int to_binary(const Big&,int,char *,BOOL justify=FALSE);
+    friend int to_binary(const Big&,int,char *,BOOL justify/*=FALSE*/);
     friend Big modmult(const Big&,const Big&,const Big&);
     friend Big mad(const Big&,const Big&,const Big&,const Big&,Big&);
     friend Big norm(const Big&);
@@ -321,7 +321,7 @@ public:
                                                          // x^m.y^k mod n 
     friend Big pow(int,Big *,Big *,Big);  // x[0]^m[0].x[1].m[1]... mod n
 
-    friend Big luc(const Big& ,const Big&, const Big&, Big *b4=NULL);
+    friend Big luc(const Big& ,const Big&, const Big&, Big *b4/*=NULL*/);
 	friend Big moddiv(const Big&,const Big&,const Big&);
     friend Big inverse(const Big&, const Big&);
     friend void multi_inverse(int,Big*,const Big&,Big *);
@@ -353,8 +353,8 @@ public:
     friend void modulo(const Big&);
     friend BOOL modulo(int,int,int,int,BOOL);
     friend Big get_modulus(void);
-    friend int window(const Big&,int,int*,int*,int window_size=5);
-    friend int naf_window(const Big&,const Big&,int,int*,int*,int store=11);
+    friend int window(const Big&,int,int*,int*,int window_size/*=5*/);
+    friend int naf_window(const Big&,const Big&,int,int*,int*,int store/*=11*/);
     friend void jsf(const Big&,const Big&,Big&,Big&,Big&,Big&);
 
 /* Montgomery stuff */

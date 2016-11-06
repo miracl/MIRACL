@@ -167,7 +167,7 @@ ZZn pow(int n,ZZn *a,Big *b)
 
 ZZn powl(const ZZn& x,const Big& k)
 {
-    return luc(2*x,k)/2;
+    return luc(2*x,k, NULL)/2;
 }
 
 ZZn luc( const ZZn& b1, const Big& b2, ZZn *b3)
