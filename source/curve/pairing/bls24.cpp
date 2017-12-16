@@ -22,7 +22,7 @@ int main()
 	ZZn2 xi;
 	int i,ns,sign,best_ham=1000;
 	mip->IOBASE=16;
-	s="E000000000000000";   
+	s=(char *)"E000000000000000";   
 
 	ns=1;
 	

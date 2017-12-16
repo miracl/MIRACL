@@ -287,7 +287,7 @@ Poly operator*(const Poly& a,const Poly& b)
         if (degb<dega) deg=degb;
     }
     else degb=dega;
-    if (deg>=FFT_BREAK_EVEN)      /* deg is minimum - both must be less than FFT_BREAK_EVEN */
+    if (deg>=FFT_BREAK_EVEN)      /* deg is minimum - both must be more than FFT_BREAK_EVEN */
     { // use fast methods 
         big *A,*B,*C;
         deg=dega+degb;     // degree of product
@@ -399,16 +399,48 @@ Poly operator%(const Poly& u,const Poly&v)
     return r;
 }
 
-Poly operator/(const Poly& u,const Poly&v)
+// returns quotient and remainder
+
+Poly divrem(Poly &r,const Poly& v)
 {
-    Poly q,r=u;
+    Poly q;
+	ZZn m;
     term *rptr=r.start;
     term *vptr=v.start;
     term *ptr,*pos;
+	m=((ZZn)1/vptr->an);
     while (rptr!=NULL && rptr->n>=vptr->n)
     {
         Poly t=v;
-        ZZn pq=rptr->an/vptr->an;
+        ZZn pq=m*rptr->an;
+        int power=rptr->n-vptr->n;
+  // quotient
+        q.addterm(pq,power);
+        t.multerm(-pq,power);
+        ptr=t.start;
+        pos=NULL;
+        while (ptr!=NULL)
+        {
+            pos=r.addterm(ptr->an,ptr->n,pos);
+            ptr=ptr->next;
+        } 
+        rptr=r.start;
+    }
+    return q;
+}
+
+Poly operator/(const Poly& u,const Poly& v)
+{
+    Poly q,r=u;
+	ZZn m;
+    term *rptr=r.start;
+    term *vptr=v.start;
+    term *ptr,*pos;
+	m=((ZZn)1/vptr->an);
+    while (rptr!=NULL && rptr->n>=vptr->n)
+    {
+        Poly t=v;
+        ZZn pq=m*rptr->an;
         int power=rptr->n-vptr->n;
   // quotient
         q.addterm(pq,power);
@@ -906,10 +938,56 @@ Poly differentiate(const Poly& orig)
     return newpoly;
 }
 
-void makemonic(Poly& p)
+ZZn makemonic(Poly& p)
 {
     term *ptr = p.start;
-    p.multerm((ZZn)1/ptr->an,0);
+	ZZn r=(ZZn)1/ptr->an;
+    p.multerm(r,0);
+	return r;
+}
+
+/* Monic Inverse. Returns GCD */
+
+Poly inverse(Poly &u,const Poly&v)
+{
+    Poly u1, u3, v1, v3, zero, q;
+	int t=0;
+    u1 = 1;  
+    u3 = u;
+    v1 = 0;
+    v3 = v;
+    zero = 0;
+    term *ptr;
+     
+	forever
+	{
+		if (v3==zero)
+		{
+			u=u1;
+			ZZn r=makemonic(u);
+			u3*=r;
+			return u3;
+		}
+		q=divrem(u3,v3);
+		u1 -=  v1*q;
+
+//cout << ".";
+//cout << "tick " << t++ << " v3= " << degree(v3) << endl;
+
+		if (u3==zero)
+		{
+			u=v1;
+			ZZn r=makemonic(u);
+			v3*=r;
+			return v3;
+		}
+		q=divrem(v3,u3);
+		v1 -=  u1*q;
+
+//cout << "tock " << t++ << " u3= " << degree(u3) << endl;
+	
+	}
+
 }
 
 // The extended euclidean algorithm
@@ -917,7 +995,8 @@ void makemonic(Poly& p)
 // in first place, then the two coefficients
 void egcd(Poly result[], const Poly& u, const Poly& v)
 {       
-    Poly u1, u2, u3, v1, v2, v3, t1, t2, t3, zero, q;
+    Poly u1, u2, u3, v1, v2, v3, zero, q;
+	int t=0;
     u1 = 1;  
     u2 = 0;
     u3 = u;
@@ -926,24 +1005,34 @@ void egcd(Poly result[], const Poly& u, const Poly& v)
     v3 = v;
     zero = 0;
     term *ptr;
-            
-    while(v3 != zero) {
-        q = u3/v3;
-        t1 = u1 - v1*q;
-        t2 = u2 - v2*q;
-        t3 = u3 - v3*q;
+     
+	forever
+	{
+		if (v3==zero)
+		{
+			result[0] = u3;
+			result[1] = u1;
+			result[2] = u2;
+			break;
+		}
+		q=u3/v3;
+		u1 -=  v1*q;
+        u2 -=  v2*q;
+        u3 -=  v3*q;
 
-        u1 = v1;
-        u2 = v2;
-        u3 = v3;
-
-        v1 = t1;
-        v2 = t2;
-        v3 = t3;
-    }
-    result[0] = u3;
-    result[1] = u1;
-    result[2] = u2;
+		if (u3==zero)
+		{
+			result[0] = v3;
+			result[1] = v1;
+			result[2] = v2;
+			break;
+		}	
+		q=v3/u3;
+		v1 -=  u1*q;
+        v2 -=  u2*q;
+        v3 -=  u3*q;
+	
+	}
 
 }
 

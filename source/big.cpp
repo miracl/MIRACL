@@ -114,8 +114,9 @@ Big lxor(const Big& x,const Big& y)
 
 Big from_binary(int len,char *ptr)
 {Big z; bytes_to_big(len,ptr,z.fn); return z;}
-int to_binary(const Big& b,int max,char *ptr,BOOL justify)
-{ return big_to_bytes(max,b.fn,ptr,justify);}
+
+//int to_binary(const Big& b,int max,char *ptr,BOOL justify)
+//{ return big_to_bytes(max,b.fn,ptr,justify);}
 
 Big modmult(const Big& b1,const Big& b2,const Big& m)
 {Big z; mad(b1.fn,b2.fn,b2.fn,m.fn,m.fn,z.fn); return z;}
@@ -174,10 +175,10 @@ Big pow(int n,Big *a,Big *b,Big p)
 
 #endif
 
-Big luc(const Big& b1,const Big& b2,const Big& b3,Big *b4)
-{Big z; if (b4!=NULL) lucas(b1.fn,b2.fn,b3.fn,b4->fn,z.fn); 
-        else          lucas(b1.fn,b2.fn,b3.fn,z.fn,z.fn);
-return z;}
+//Big luc(const Big& b1,const Big& b2,const Big& b3,Big *b4)
+//{Big z; if (b4!=NULL) lucas(b1.fn,b2.fn,b3.fn,b4->fn,z.fn); 
+//        else          lucas(b1.fn,b2.fn,b3.fn,z.fn,z.fn);
+//return z;}
 
 
 Big inverse(const Big& b1, const Big& b2)
@@ -328,8 +329,9 @@ istream& operator>>(istream& s, Big& x)
 
 // Note new parameter of window_size. Default to 5, but reduce to 4 (or even 3) to save RAM
 
-int window(const Big& x,int i,int *nbs,int *nzs,int window_size)
-{ /* returns sliding window value, max. of 5 bits,         *
+//int window(const Big& x,int i,int *nbs,int *nzs,int window_size)
+//{ 
+	/* returns sliding window value, max. of 5 bits,         *
    * starting at i-th bit of big x. nbs is number of bits  *
    * processed, nzs is the number of additional trailing   *
    * zeros detected. Returns valid bit pattern 1x..x1 with *
@@ -337,11 +339,12 @@ int window(const Big& x,int i,int *nbs,int *nzs,int window_size)
    * nbs=5, nzs=0. 11001 will return 3, with nbs=2, nzs=2, *
    * having stopped after the first 11..  */
 
-    return mr_window(x.fn,i,nbs,nzs,window_size);
-}
+//    return mr_window(x.fn,i,nbs,nzs,window_size);
+//}
 
-int naf_window(const Big& x,const Big& x3,int i,int *nbs,int *nzs,int store)
-{ /* returns sliding window value, max of 5 bits           *
+//int naf_window(const Big& x,const Big& x3,int i,int *nbs,int *nzs,int store)
+//{ 
+	/* returns sliding window value, max of 5 bits           *
    * starting at i-th bit of x. nbs is number of bits      *
    * processed. nzs is number of additional trailing       *    
    * zeros detected. x and x3 (which is 3*x) are           *
@@ -354,8 +357,8 @@ int naf_window(const Big& x,const Big& x3,int i,int *nbs,int *nzs,int store)
    * are never side by side, so 10T10T won't happen        */
 
 
-    return mr_naf_window(x.fn,x3.fn,i,nbs,nzs,store);
-}
+//    return mr_naf_window(x.fn,x3.fn,i,nbs,nzs,store);
+//}
 
 #ifndef MR_NO_ECC_MULTIADD
 void jsf(const Big& k0,const Big& k1,Big& u0p,Big& u0m,Big& u1p,Big& u1m)

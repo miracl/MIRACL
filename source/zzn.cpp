@@ -170,10 +170,10 @@ ZZn powl(const ZZn& x,const Big& k)
     return luc(2*x,k)/2;
 }
 
-ZZn luc( const ZZn& b1, const Big& b2, ZZn *b3)
-{ZZn z; if (b3!=NULL) nres_lucas(b1.fn,b2.getbig(),b3->fn,z.fn); 
-        else          nres_lucas(b1.fn,b2.getbig(),z.fn,z.fn); 
- return z;}
+//ZZn luc( const ZZn& b1, const Big& b2, ZZn *b3)
+//{ZZn z; if (b3!=NULL) nres_lucas(b1.fn,b2.getbig(),b3->fn,z.fn); 
+//        else          nres_lucas(b1.fn,b2.getbig(),z.fn,z.fn); 
+// return z;}
 
 
 ZZn sqrt(const ZZn& b)

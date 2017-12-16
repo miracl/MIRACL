@@ -183,7 +183,15 @@ public:
     friend ZZn getB(void);        // get B parameter of elliptic curve
 
     friend ZZn  sqrt(const ZZn&); // only works if modulus is prime
-    friend ZZn  luc( const ZZn&, const Big&, ZZn* b3=NULL);
+
+    friend ZZn  luc( const ZZn& b1, const Big& b2, ZZn* b3=NULL)
+	{
+		ZZn z; if (b3!=NULL) nres_lucas(b1.fn,b2.getbig(),b3->fn,z.fn); 
+        else          nres_lucas(b1.fn,b2.getbig(),z.fn,z.fn); 
+		return z;
+	}
+
+    //friend ZZn  luc( const ZZn&, const Big&, ZZn* b3=NULL);
 
     big getzzn(void) const;
 

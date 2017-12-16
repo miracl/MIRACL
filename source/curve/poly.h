@@ -72,7 +72,8 @@ public:
     friend Poly compose(const Poly&,const Poly&);
     friend Poly modmult(const Poly&,const Poly&,const Poly&);
     friend void egcd(Poly result[], const Poly&,const Poly&);
-    friend void makemonic(Poly&);
+	friend Poly inverse(Poly&,const Poly&);
+    friend ZZn makemonic(Poly&);
     friend Poly differentiate(const Poly&);
 
     friend Poly reduce(const Poly&,const Poly&);
@@ -82,6 +83,7 @@ public:
     friend Poly operator-(const Poly&,const Poly&);
     friend Poly operator+(const Poly&,const Poly&);
     friend Poly operator-(const Poly&);
+	friend Poly divrem(Poly&,const Poly&);
 
     friend Poly operator*(const ZZn& ,Variable);
     friend Poly pow(Variable,int);

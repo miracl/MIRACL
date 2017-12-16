@@ -26,7 +26,7 @@ int main()
     
     mip->IOBASE=16;
 
-    s="C000000000000000";
+    s=(char *)"C000000000000000";
 			
     ns=1;
 	forever
@@ -41,9 +41,11 @@ int main()
          
 			p=pow(x,6)-2*pow(x,5)+2*pow(x,3)+x+1;
 
-			if (p%8==1) continue;
+
 			if (p%3!=0) continue;   // check congruence conditions
 			p/=3;
+
+			if (p%8==1) continue;
 			if (p%8==7 && (p%5==1 || p%5==4)) continue;
    
 			t=x+1;

@@ -154,10 +154,14 @@ void sha3_hash(sha3 *sh,char *hash)
 { /* pad message and finish - supply digest */
 	int i,j,k,m=0;
 	mr_unsign64 el;
-
-	sha3_process(sh,0x01);
-	while (sh->length%sh->rate!=sh->rate-1) sha3_process(sh,0x00);
-	sha3_process(sh,0x80); /* this will force a final transform */
+	int q=sh->rate-(sh->length%sh->rate);
+	if (q==1) sha3_process(sh,0x86); 
+	else
+	{
+		sha3_process(sh,0x06);
+		while (sh->length%sh->rate!=sh->rate-1) sha3_process(sh,0x00);
+		sha3_process(sh,0x80); /* this will force a final transform */
+	}
 
 /* extract by columns - assuming here digest size < rate */
 	for (j=0;j<5;j++)
