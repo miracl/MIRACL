@@ -218,6 +218,45 @@ ZZn8 operator/(const ZZn8& x,int i)
 ZZn8 randn8(void)
 {ZZn8 w; w.a=randn4(); w.b=randn4(); w.unitary=FALSE; return w;}
 #endif
+
+
+ZZn8 rhs(const ZZn8& x)
+{
+	ZZn8 w,A,B;
+	miracl *mip=get_mip();
+	int twist=mip->TWIST;
+	w=x*x*x;
+	A=(ZZn8)getA(); B=(ZZn8)getB();
+	if (twist)
+	{
+	  if (twist==MR_QUARTIC_M)
+	  {
+			w+=tx(A)*x;
+	  }
+	  if (twist==MR_QUARTIC_D)
+	  {
+			w+=txd(A)*x;
+	  }
+	  if (twist==MR_SEXTIC_M)
+	  {
+			w+=tx(B);
+	  }
+	  if (twist==MR_SEXTIC_D)
+	  {
+			w+=txd(B);
+	  }
+	  if (twist==MR_QUADRATIC)
+	  {
+			w+=tx(tx(A))*x+tx(tx(tx(B)));
+	  }
+	}
+	else
+	{
+        w+=A*x+B;
+    }
+	return w;
+}
+
 BOOL qr(const ZZn8& x)
 {
     ZZn4 a,s;
@@ -294,6 +333,16 @@ ZZn8 tx(const ZZn8& x)
     ZZn4 t=tx(x.b);
     ZZn8 u(t,x.a);
     return u;
+}
+
+ZZn8 txd(const ZZn8& x)
+{
+	ZZn4 u,v;
+	x.get(u,v);
+	u=txd(u);
+	ZZn8 w(v,u);
+
+    return w;
 }
 
 ZZn8 tx2(const ZZn8& x)

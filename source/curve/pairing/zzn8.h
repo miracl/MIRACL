@@ -125,6 +125,8 @@ public:
     friend ZZn8 operator/(const ZZn8&,const ZZn&);
     friend ZZn8 operator/(const ZZn8&,int);
 
+	friend ZZn8 rhs(const ZZn8&);
+
     friend ZZn4  real(const ZZn8& x)      {return x.a;}
     friend ZZn4  imaginary(const ZZn8& x) {return x.b;}
 
@@ -133,6 +135,7 @@ public:
     friend ZZn8 powl(const ZZn8&,const Big&);
     friend ZZn8 conj(const ZZn8&);
     friend ZZn8 tx(const ZZn8&);
+    friend ZZn8 txd(const ZZn8&);
 	friend ZZn8 tx2(const ZZn8&);
     friend ZZn8 inverse(const ZZn8&);
 #ifndef MR_NO_RAND

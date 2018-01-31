@@ -267,6 +267,8 @@ In the subdirectory SOURCE
   ECN4.CPP     - Elliptic curves over Fp4 - Implementation file
   ECN6.H       - Elliptic curves over Fp6 - Header file
   ECN6.CPP     - Elliptic curves over Fp6 - Implementation file
+  ECN8.H       - Elliptic curves over Fp8 - Header file
+  ECN8.CPP     - Elliptic curves over Fp8 - Implementation file
   ZZN2.H       - Fp2 arithmetic - Header file
   ZZN2.CPP     - Fp2 arithmetic - Implementation file
   ZZN3.H       - Fp3 arithmetic - Header file
@@ -304,6 +306,7 @@ In the subdirectory SOURCE
   KSS18.CPP    - Program to generate KSS k=18 curves
   BLS12.CPP    - Program to generate BLS k=12 curves
   BLS24.CPP    - Program to generate BLS k=24 curves
+  BESTPAIR.CPP - Program to generate nice pairing-friendly curves
   AKE12BNE.CPP - Authenticated Key Exchange, k=12, BN curve  - Experimental!
   AKE12BNA.CPP - Authenticated Key Exchange, k=12, BN curve, Ate pairing, sextic twist!
   AKE12BNR.CPP - Authenticated Key Exchange, k=12, BN curve, R-ate pairing, sextic twist! 1-2-6-12 tower
