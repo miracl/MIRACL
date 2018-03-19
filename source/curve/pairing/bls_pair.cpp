@@ -1153,6 +1153,8 @@ void PFC::random(G1& w)
 	else x0=strong_rand(RNG,*mod);
 
 	while (!w.g.set(x0,x0)) x0+=1;
+
+	w.g*=*cof;
 }
 
 Big PFC::hash_to_aes_key(const GT& w)
@@ -1442,7 +1444,7 @@ G2 operator+(const G2& x,const G2& y)
 {
 	G2 z=x;
 	ECn4 t=y.g;
-	t.norm();
+	//t.norm();
 	z.g+=t;
 	return z;
 }
