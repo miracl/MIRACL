@@ -78,7 +78,7 @@ Big operator*(const Big& b1, const Big& b2)
 {Big xbb; multiply(b1.fn,b2.fn,xbb.fn); return xbb;}
 
 #ifndef MR_STATIC
-BOOL fmt(int n,const Big& b1,const Big& b2,Big& f)
+BOOL fmth(int n,const Big& b1,const Big& b2,Big& f)
 {
 #ifdef MR_KCM
  return kcm_top(n,b1.fn,b2.fn,f.fn);       /* see mrkcm.tpl */

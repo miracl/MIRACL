@@ -274,7 +274,7 @@ public:
     friend Big operator*(int,const Big&);
     friend Big operator*(const Big&,const Big&);
 
-    friend BOOL fmt(int n,const Big&,const Big&,Big&);   // fast mult - top half
+    friend BOOL fmth(int n,const Big&,const Big&,Big&);   // fast mult - top half
 
     friend Big operator/(const Big&,int);
     friend Big operator/(const Big&,const Big&);
