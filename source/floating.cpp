@@ -578,7 +578,7 @@ Float& Float::operator*=(const Float& b)
     {
         if (m<0) m.negate();  // result will be positive
         m.shift(precision-length(m));  // make them precision length
-        extra=fmt(precision,m,m,m);
+        extra=fmth(precision,m,m,m);
         e+=e;
         if (extra) e--;
     }
@@ -593,7 +593,7 @@ Float& Float::operator*=(const Float& b)
         m.shift(precision-length(m));  // make them precision length
         y.shift(precision-length(y));
 
-        extra=fmt(precision,m,y,m);
+        extra=fmth(precision,m,y,m);
 
         if (s<0) m.negate();
         e+=b.e;

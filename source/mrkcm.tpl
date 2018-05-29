@@ -435,7 +435,7 @@ void kcm_square(_MIPD_ int n,big x,big z)
 }
 
 BOOL kcm_top(_MIPD_ int n,big x,big y,big z)
-{ /* to support floating-point - see float.cpp and fmt function in big.cpp */
+{ /* to support floating-point - see float.cpp and fmth function in big.cpp */
 #ifdef MR_OS_THREADS
     miracl *mr_mip=get_mip();
 #endif
