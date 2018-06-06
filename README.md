@@ -6,6 +6,12 @@ Multiprecision Integer and Rational Arithmetic Cryptographic Library – the MIR
 Why is it different?
 While many other cryptographic SDKs are focused on PC use, MIRACL also enables developers to build security into highly constrained environments, including embedded, mobile apps and SCADA.
 
+Full documentation can be accessed here:
+<ul type="disc">
+  <li><a href="https://libraries.docs.miracl.com/miracl-user-manual/about">About the MIRACL Crypto SDK: Introduction to installation</li>
+  <li><a href="https://libraries.docs.miracl.com/miracl-explained/what-is-miracl">MIRACL Explained: Licensing and reference manual</a></li>
+  </ul>
+
 <h2>MIRACL enables</h2>
 
 <ul type="disc">
@@ -31,40 +37,36 @@ MIRACL delivers a wide and unique range of benefits, enabling developers to secu
 The MIRACL library consists of well over 100 routines that cover all aspects of multi-precision arithmetic. Two new data-types are defined - big for large integers and flash (short for floating-slash) for large rational numbers. The large integer routines are based on Knuth’s algorithms, described in Chapter 4 of his classic work ‘The Art of Computer Programming’. Floating-slash arithmetic, which works with rounded fractions, was originally proposed by D. Matula and P. Kornerup. All routines have been thoroughly optimised for speed and efficiency, while at the same time remaining standard, portable C. However optional fast assembly language alternatives for certain time-critical routines are also included, particularly for the popular Intel 80x86 range of processors. A C++ interface is also provided. Full source code is included.
 
 <h2>Bug Tracker</h2>
-  CertiVox uses JIRA for bug and feature tracking which is integrated with our development system.   If you find a bug, you should report bugs into the <a href="https://sdlc.certivox.com/browse/MIRACL">CertiVox bug tracker&nbsp;</a>.  You can check that the bug hasn't already been reported by searching for it. If you find the bug already reported, you can add a comment of your own about it, or change its status to &quot;Confirmed&quot;. If the bug hasn't been reported, you can file a new bug report.</p>
+  MIRACL Ltd. uses JIRA for bug and feature tracking which is integrated with our development system.   If you find a bug, you should report bugs into the <a href="https://sdlc.certivox.com/browse/MIRACL">MIRACL bug tracker&nbsp;</a>.  You can check that the bug hasn't already been reported by searching for it. If you find the bug already reported, you can add a comment of your own about it, or change its status to &quot;Confirmed&quot;. If the bug hasn't been reported, you can file a new bug report.</p>
 <h2>Community</h2>
-  CertiVox is most of all a community of like-minded information security professionals who believe that cryptography is a necessary tool to advance individual freedom and safeguard privacy. CertiVox acts on that belief by providing tools that can be used to secure information, guard privacy and advance individual freedom.<br />
-  Anyone who uses CertiVox code or services is part of this global community, and we invite you to help shape CertiVox to better meet your needs. To make it yours!<br />
+  MIRACL Ltd. is most of all a community of like-minded information security professionals who believe that cryptography is a necessary tool to advance individual freedom and safeguard privacy. MIRACL Ltd. acts on that belief by providing tools that can be used to secure information, guard privacy and advance individual freedom.<br />
+  Anyone who uses MIRACL Ltd. code or services is part of this global community, and we invite you to help shape MIRACL to better meet your needs. To make it yours!<br />
   Keep track of development and community news.</p>
 <ul type="disc">
-  <li>Find out more about our Developer      Community here: http://certivox.org</li>
-  <li>Follow @CertiVox on <a href="https://twitter.com/CertiVox">https://twitter.com/CertiVox</a></li>
-  <li>Read and subscribe to <a href="http://www.certivox.com/blog/?__hstc=125798869.90d8a2c032af1fce3ac56bea6ee3c73a.1372068197871.1373639694528.1373644485299.25&amp;__hssc=125798869.8.1373644485299">Planet      CertiVox </a>&nbsp; for the latest news first </li>
-  <li>Have a question that's not a      feature request or bug report? <u><a href="http://certivox.org/display/WLCM/Get+Involved">Ask on the mailing      list.</a></u></li>
+  <li>Follow @MIRACL on <a href="https://twitter.com/MIRACL">https://twitter.com/MIRACL</a></li>
+  <li>Read our <a href="https://www.miracl.com/crypto-research-with-miracl-labs">blog </a> for the latest security and crypto news first </li>
+  <li>Have a question that's not a feature request or bug report? <u><a href="https://www.miracl.com/contact-miracl">Contact Us.</a></u></li>
 </ul>
 <h2>Contributing:</h2>
-  CertiVox provides an Open Source suite of solutions for data security.  The CertiVox team firmly believes that our solutions and the organizations and users who benefit by them all derive value from active contributions from the community.<br />
-  You can contribute to help shape and improve our CertiVox products.  If you have ideas and suggestions on new features and improvements that you would like to see and help bring to CertiVox, please fork the public available code on GitHub, or <a href="http://certivox.org/display/WLCM/Get+Involved">find out more about contributing here</a>.
+  MIRACL Ltd. provides an Open Source suite of solutions for data security.  The MIRACL Ltd. team firmly believes that our solutions and the organizations and users who benefit by them all derive value from active contributions from the community.<br />
+  You can contribute to help shape and improve our MIRACL Ltd. products.  If you have ideas and suggestions on new features and improvements that you would like to see and help bring to MIRACL Ltd., please fork the public available code on GitHub.
 <h2>Authors:</strong></h2>
-  <strong>CertiVox</strong></p>
+  <strong>MIRACL Ltd.</strong></p>
 <ul>
-  <li><a href="http://www.certivox.com/">http://www.certivox.com/</a></li>
-  <li><a href="http://certivox.org">http://certivox.org</a></li>
-  <li><a href="https://github.com/CertiVox">https://github.com/CertiVox</a></li>
-  <li><a href="https://twitter.com/CertiVox">https://twitter.com/CertiVox</a></li>
-  <li><a href="https://www.facebook.com/CertiVox">https://www.facebook.com/CertiVox</a></li>
-  <li><a href="http://www.linkedin.com/company/certivox">http://www.linkedin.com/company/certivox</a></li>
+  <li><a href="https://www.miracl.com/">https://www.miracl.com/</a></li>
+  <li><a href="https://github.com/miracl">https://github.com/miracl</a></li>
+  <li><a href="https://twitter.com/MIRACL">https://twitter.com/miracl</a></li>
+  <li><a href="https://www.linkedin.com/company/miracl/">https://www.linkedin.com/company/miracl/</a></li>
 </ul>
 
 <h2>Copyright and License:</strong></h2> 
-<p>© 2014 CertiVox UK Ltd., All Rights Reserved.</p>
-<p>MIRACL provides developers with an  extensive and efficient set of cryptographic functions. For further information about its features and functionalities please refer to http://www.certivox.com.</p>
-<p>MIRACL is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>                    
-<p>MIRACL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.</p>                                                                   
+<p>© 2018 MIRACL UK Ltd., All Rights Reserved.</p>
+<p>MIRACL SDK provides developers with an  extensive and efficient set of cryptographic functions. For further information about its features and functionalities please refer to https://www.miracl.com.</p>
+<p>MIRACL SDK is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>                    
+<p>MIRACL SDK is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.</p>                                                                   
 <p>You can be released from the requirements of the license by purchasing a commercial license. Buying such a license is mandatory as soon as you develop commercial activities involving MIRACL without disclosing the source code of your own applications, or shipping MIRACL with a closed source product.</P> 
-  <p>For full details regarding our CertiVox terms of service please refer to the following links:</p>
+  <p>For full details regarding our MIRACL Ltd. terms of service please refer to the following links:</p>
 <ul>
-  <li><a href="http://www.certivox.com/about-certivox/terms-and-conditions/">Our Terms and Conditions</a></li>
-  <li><a href="http://www.certivox.com/about-certivox/security-privacy/">Our Security and Privacy</a></li>
-  <li><a href="http://www.certivox.com/about-certivox/patents/">Our Statement of Position and Our Promise on Software Patents</a></li>
+  <li><a href="https://www.miracl.com/privacy-policy">Privacy Policy</a></li>
+  <li><a href="https://www.miracl.com/gdpr-privacy-policy">GDPR Data Protection Policy</a></li>
 </ul>
