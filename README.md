@@ -8,8 +8,8 @@ While many other cryptographic SDKs are focused on PC use, MIRACL also enables d
 
 Full documentation can be accessed here:
 <ul type="disc">
-  <li><a href="https://libraries.docs.miracl.com/miracl-user-manual/about">About the MIRACL Crypto SDK: Introduction to installation</li>
-  <li><a href="https://libraries.docs.miracl.com/miracl-explained/what-is-miracl">MIRACL Explained: Licensing and reference manual</a></li>
+  <li><a href="https://libraries.docs.miracl.com/miracl-user-manual/">About the MIRACL Crypto SDK: Introduction to installation</li>
+  <li><a href="https://libraries.docs.miracl.com/miracl-explained/">MIRACL Explained: Licensing and reference manual</a></li>
   </ul>
 
 <h2>MIRACL enables</h2>
@@ -36,8 +36,6 @@ MIRACL delivers a wide and unique range of benefits, enabling developers to secu
 
 The MIRACL library consists of well over 100 routines that cover all aspects of multi-precision arithmetic. Two new data-types are defined - big for large integers and flash (short for floating-slash) for large rational numbers. The large integer routines are based on Knuth’s algorithms, described in Chapter 4 of his classic work ‘The Art of Computer Programming’. Floating-slash arithmetic, which works with rounded fractions, was originally proposed by D. Matula and P. Kornerup. All routines have been thoroughly optimised for speed and efficiency, while at the same time remaining standard, portable C. However optional fast assembly language alternatives for certain time-critical routines are also included, particularly for the popular Intel 80x86 range of processors. A C++ interface is also provided. Full source code is included.
 
-<h2>Bug Tracker</h2>
-  MIRACL Ltd. uses JIRA for bug and feature tracking which is integrated with our development system.   If you find a bug, you should report bugs into the <a href="https://sdlc.certivox.com/browse/MIRACL">MIRACL bug tracker&nbsp;</a>.  You can check that the bug hasn't already been reported by searching for it. If you find the bug already reported, you can add a comment of your own about it, or change its status to &quot;Confirmed&quot;. If the bug hasn't been reported, you can file a new bug report.</p>
 <h2>Community</h2>
   MIRACL Ltd. is most of all a community of like-minded information security professionals who believe that cryptography is a necessary tool to advance individual freedom and safeguard privacy. MIRACL Ltd. acts on that belief by providing tools that can be used to secure information, guard privacy and advance individual freedom.<br />
   Anyone who uses MIRACL Ltd. code or services is part of this global community, and we invite you to help shape MIRACL to better meet your needs. To make it yours!<br />
