@@ -8,9 +8,9 @@ While many other cryptographic SDKs are focused on PC use, MIRACL also enables d
 
 Full documentation can be accessed here:
 <ul type="disc">
-  <li><a href="https://libraries.docs.miracl.com/miracl-user-manual/about">About the MIRACL Crypto SDK: Introduction to installation</li>
-  <li><a href="https://libraries.docs.miracl.com/miracl-explained/what-is-miracl">MIRACL Explained: Licensing and reference manual</a></li>
-  </ul>
+  <li><a href="docs/miracl-user-manual/">About the MIRACL Crypto SDK: Introduction to installation</li>
+  <li><a href="docs/miracl-explained/">MIRACL Explained: Licensing and reference manual</a></li>
+</ul>
 
 <h2>MIRACL enables</h2>
 
@@ -44,8 +44,8 @@ The MIRACL library consists of well over 100 routines that cover all aspects of 
   Keep track of development and community news.</p>
 <ul type="disc">
   <li>Follow @MIRACL on <a href="https://twitter.com/MIRACL">https://twitter.com/MIRACL</a></li>
-  <li>Read our <a href="https://www.miracl.com/crypto-research-with-miracl-labs">blog </a> for the latest security and crypto news first </li>
-  <li>Have a question that's not a feature request or bug report? <u><a href="https://www.miracl.com/contact-miracl">Contact Us.</a></u></li>
+  <li>Read our <a href="https://miracl.com/crypto-research-with-miracl-labs/">blog </a> for the latest security and crypto news first </li>
+  <li>Have a question that's not a feature request or bug report? <u><a href="https://miracl.com/contact-miracl/">Contact Us.</a></u></li>
 </ul>
 <h2>Contributing:</h2>
   MIRACL Ltd. provides an Open Source suite of solutions for data security.  The MIRACL Ltd. team firmly believes that our solutions and the organizations and users who benefit by them all derive value from active contributions from the community.<br />
@@ -53,20 +53,20 @@ The MIRACL library consists of well over 100 routines that cover all aspects of 
 <h2>Authors:</strong></h2>
   <strong>MIRACL Ltd.</strong></p>
 <ul>
-  <li><a href="https://www.miracl.com/">https://www.miracl.com/</a></li>
+  <li><a href="https://miracl.com/">https://miracl.com/</a></li>
   <li><a href="https://github.com/miracl">https://github.com/miracl</a></li>
   <li><a href="https://twitter.com/MIRACL">https://twitter.com/miracl</a></li>
   <li><a href="https://www.linkedin.com/company/miracl/">https://www.linkedin.com/company/miracl/</a></li>
 </ul>
 
-<h2>Copyright and License:</strong></h2> 
+<h2>Copyright and License:</strong></h2>
 <p>© 2018 MIRACL UK Ltd., All Rights Reserved.</p>
-<p>MIRACL SDK provides developers with an  extensive and efficient set of cryptographic functions. For further information about its features and functionalities please refer to https://www.miracl.com.</p>
-<p>MIRACL SDK is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>                    
-<p>MIRACL SDK is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.</p>                                                                   
-<p>You can be released from the requirements of the license by purchasing a commercial license. Buying such a license is mandatory as soon as you develop commercial activities involving MIRACL without disclosing the source code of your own applications, or shipping MIRACL with a closed source product.</P> 
+<p>MIRACL SDK provides developers with an  extensive and efficient set of cryptographic functions. For further information about its features and functionalities please refer to https://miracl.com.</p>
+<p>MIRACL SDK is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+<p>MIRACL SDK is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.</p>
+<p>You can be released from the requirements of the license by purchasing a commercial license. Buying such a license is mandatory as soon as you develop commercial activities involving MIRACL without disclosing the source code of your own applications, or shipping MIRACL with a closed source product.</P>
   <p>For full details regarding our MIRACL Ltd. terms of service please refer to the following links:</p>
 <ul>
-  <li><a href="https://www.miracl.com/privacy-policy">Privacy Policy</a></li>
-  <li><a href="https://www.miracl.com/gdpr-privacy-policy">GDPR Data Protection Policy</a></li>
+  <li><a href="https://miracl.com/privacy-policy/">Privacy Policy</a></li>
+  <li><a href="https://miracl.com/gdpr-privacy-policy/">GDPR Data Protection Policy</a></li>
 </ul>
