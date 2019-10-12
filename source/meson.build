@@ -1,8 +1,18 @@
-mrmuldv_g64 = 'mrmuldv.g64'
-mrmuldv_c = 'mrmuldv.c'
+if host_machine.cpu_family() == 'x86_64'
+        infile = files('mrmuldv.g64')
+endif
 
-mrmuldvc = custom_target('mrmuldv.c', output: 'mrmuldv.c', input: 'mrmuldv.g64',
+if host_machine.cpu_family() == 'x86'
+        infile = files('mrmuldv.gcc')
+endif
+
+if infile.length() != 0
+	mrmuldvc = custom_target('mrmuldv.c', output: 'mrmuldv.c', input: infile,
 	  command: [cp, '@INPUT@', '@OUTPUT@' ])
+endif
+if infile.length() == 0
+	mrmuldvc = []
+endif
 
 miracl = static_library('miracl', [ 'mrcore.c', 'mrarth0.c',
 	'mrarth1.c', 'mrarth2.c', 'mralloc.c',

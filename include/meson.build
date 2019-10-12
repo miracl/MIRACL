@@ -1,6 +1,18 @@
 inc = include_directories('.')
 
-mirdefh  = custom_target('cpmirdef',  output: 'mirdef.h', input: 'mirdef.h64',
+if host_machine.cpu_family() == 'x86_64'
+	infile = files('mirdef.h64')
+endif
+
+if host_machine.cpu_family() == 'x86'
+	infile = files('mirdef.h32')
+endif
+
+if host_machine.cpu_family() == 'arm'
+	infile = files('mirdef.arm')
+endif
+
+mirdefh  = custom_target('cpmirdef',  output: 'mirdef.h', input: infile,
 	  command: [cp, '@INPUT@', '@OUTPUT@' ])
 
 install_headers([

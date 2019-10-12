@@ -28,8 +28,9 @@ Installation
 A new build system has been implemented for use on multiple platforms, using
 the [Meson Build System](https://github.com/mesonbuild/meson).
 
-By default, this system is set up for *x86_64*, meaning a conventional 64-bit
-PC. The files used for this will not work well (or at all) on a 32-bit platform.
+This system is set up to handle 64-bit Intel/AMD, 32-bit Intel/AMD, and 32-bit
+ARM. If you are using a different platform, proceed to the
+[Overview](#overview) for a manual build.
 
 Further configurations to the build system may later allow an automated
 platform detection, however, for the moment, this is hard-coded. If you are
