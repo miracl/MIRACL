@@ -12,6 +12,7 @@ if host_machine.cpu_family() == 'arm'
 	infile = files('mirdef.arm')
 endif
 
+install_data(infile, install_dir: get_option('includedir'), rename: 'mirdef.h')
 mirdefh  = custom_target('cpmirdef',  output: 'mirdef.h', input: infile,
 	  command: [cp, '@INPUT@', '@OUTPUT@' ])
 

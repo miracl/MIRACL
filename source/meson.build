@@ -14,7 +14,7 @@ if infile.length() == 0
 	mrmuldvc = []
 endif
 
-miracl = static_library('miracl', [ 'mrcore.c', 'mrarth0.c',
+miracl = both_libraries('miracl', [ 'mrcore.c', 'mrarth0.c',
 	'mrarth1.c', 'mrarth2.c', 'mralloc.c',
 	'mrsmall.c', 'mrio1.c', 'mrio2.c',
 	'mrgcd.c', 'mrjack.c', 'mrxgcd.c',
