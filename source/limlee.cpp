@@ -123,7 +123,7 @@ int main()
 
     permutation=1L;
     for (i=0;i<np;i++) permutation<<=1;
-    permutation-=1;     /* permuation = 2^np-1 */
+    permutation-=1;     /* permutation = 2^np-1 */
 
 /* generate p   */
     fail=FALSE;
