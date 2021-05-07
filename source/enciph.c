@@ -63,7 +63,7 @@ int main()
     irand(seed);
     bigrand(ke,x);
     printf("file to be enciphered = ");
-    gets(ifname);
+    fgets(ifname, 13, 0);
     fli=FALSE;
     if (strlen(ifname)>0) fli=TRUE;
     if (fli)
@@ -84,7 +84,7 @@ int main()
         do
         {
             printf("output filename = ");
-            gets(ofname); 
+            fgets(ofname, 13, 0); 
         } while (strlen(ofname)==0);
         strip(ofname);    
         strcat(ofname,".blg");

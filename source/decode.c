@@ -80,12 +80,12 @@ int main()
     do
     { /* get input file */
         printf("file to be decoded = ");
-        gets(ifname);
+        fgets(ifname, 13, 0);
     } while (strlen(ifname)==0);
     strip(ifname);
     strcat(ifname,".rsa");
     printf("output filename = ");
-    gets(ofname);
+    fgets(ofname, 13, 0);
     flo=FALSE;
     if (strlen(ofname)>0) 
     { /* set up output file */

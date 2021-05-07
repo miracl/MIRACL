@@ -61,7 +61,7 @@ int main()
     do
     { /* get input file */
         printf("file to be deciphered = ");
-        gets(ifname);
+        fgets(ifname, 13, 0);
     } while (strlen(ifname)==0);
     strip(ifname);
     strcat(ifname,".key");
@@ -76,7 +76,7 @@ int main()
     strip(ifname);
     strcat(ifname,".blg");
     printf("output filename = ");
-    gets(ofname);
+    fgets(ofname, 13, 0);
     flo=FALSE;
     if (strlen(ofname)>0) 
     { /* set up output file */

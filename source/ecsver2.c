@@ -117,7 +117,7 @@ int main()
 
 /* get message */
     printf("signed file = ");
-    gets(ifname);
+    fgets(ifname, 50, 0);
     strcpy(ofname,ifname);
     strip(ofname);
     strcat(ofname,".ecs");

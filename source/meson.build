@@ -34,6 +34,7 @@ miracl = both_libraries('miracl', [ 'mrcore.c', 'mrarth0.c',
 	mrmuldvc, mirdefh
 	], include_directories: inc, install: true, install_dir : 'lib')
 
+libm = meson.get_compiler('c').find_library('m')
 
 if get_option('examples')
 	executable('hail', [ mirdefh, 'hail.c' ], include_directories: inc, link_with: miracl)
@@ -44,8 +45,8 @@ if get_option('examples')
 	executable('pollard', [ mirdefh, 'pollard.c' ], include_directories: inc, link_with: miracl)
 	executable('williams', [ mirdefh, 'williams.c' ], include_directories: inc, link_with: miracl)
 	executable('lenstra', [ mirdefh, 'lenstra.c' ], include_directories: inc, link_with: miracl)
-	executable('qsieve', [ mirdefh, 'qsieve.c' ], include_directories: inc, link_with: miracl)
-	executable('factor', [ mirdefh, 'factor.c' ], include_directories: inc, link_with: miracl)
+	executable('qsieve', [ mirdefh, 'qsieve.c' ], include_directories: inc, link_with: miracl, dependencies: libm)
+	executable('factor', [ mirdefh, 'factor.c' ], include_directories: inc, link_with: miracl, dependencies: libm)
 	executable('kangaroo', [ mirdefh, 'kangaroo.c' ], include_directories: inc, link_with: miracl)
 	executable('genprime', [ mirdefh, 'genprime.c' ], include_directories: inc, link_with: miracl)
 	executable('index', [ mirdefh, 'index.c' ], include_directories: inc, link_with: miracl)
