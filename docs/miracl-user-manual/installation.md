@@ -16,11 +16,51 @@
 Installation
 ---
 
+* [Quick Start](#quickstart)
 * [Overview](#overview)
 * [Optimising](#optimising)
 * [Upgrading from Version 3](#upgrading)
 * [Multi-Threaded Programming](#multi)
 * [Constrained Environments](#contrained)
+
+## Quick Start <a id="quickstart"></a>
+
+A new build system has been implemented for use on multiple platforms, using
+the [Meson Build System](https://github.com/mesonbuild/meson).
+
+This system is set up to handle 64-bit Intel/AMD, 32-bit Intel/AMD, and 32-bit
+ARM. If you are using a different platform, proceed to the
+[Overview](#overview) for a manual build.
+
+Further configurations to the build system may later allow an automated
+platform detection, however, for the moment, this is hard-coded. If you are
+building on or for a different platform, proceed to the overview for the
+necessary build steps.
+
+To build the system in a new sub-directory called 'build_here', execute:
+
+```
+meson build_here
+ninja -C build_here
+```
+
+To install to the default location, you simply:
+
+```
+ninja -C build_here install
+```
+
+A different installation prefix may be specified using:
+
+```
+meson configure build_here --prefix=/a/better/place/to/be
+```
+
+To build the example applications:
+
+```
+meson configure build_here -Dexamples=true
+```
 
 ## Overview <a id="overview"></a>
 
